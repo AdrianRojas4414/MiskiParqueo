@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.google.gms.google.services)
+    //alias(libs.plugins.google.gms.google.services)
     alias(libs.plugins.ksp)
 }
 
@@ -59,8 +59,11 @@ dependencies {
     implementation (libs.koin.androidx.compose)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.converter.gson)
-    implementation(libs.firebase.database)
-    implementation(libs.firebase.messaging)
+    //ACTIVAR CUANDO LOS DATOS YA NO ESTEN HARDCODE
+    //implementation(libs.firebase.database)
+    //implementation(libs.firebase.messaging)
+
+    implementation("androidx.compose.material:material-icons-extended:1.7.8")
 
     //local bundle room
     implementation(libs.bundles.local)
