@@ -29,7 +29,7 @@ import org.koin.androidx.compose.koinViewModel
 fun SignUpScreen(
     modifier: Modifier = Modifier,
     vm: SignUpViewModel = koinViewModel(),
-    //onNavigateToLogin: () -> Unit,
+    onNavigateToLogin: () -> Unit,
     //onNavigateToMap: () -> Unit
 ) {
     var firstName by remember { mutableStateOf("") }
@@ -234,7 +234,7 @@ fun SignUpScreen(
             fontSize = 14.sp,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary,
-            //modifier = Modifier.clickable { onNavigateToLogin() }
+            modifier = Modifier.clickable { onNavigateToLogin() }
         )
     }
 }
