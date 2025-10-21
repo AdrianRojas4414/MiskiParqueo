@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "467570912555",
-    "project_id": "miskiparqueo-dfdfa",
-    "storage_bucket": "miskiparqueo-dfdfa.firebasestorage.app"
+    "project_number": "580315170847",
+    "project_id": "miskiparqueop",
+    "storage_bucket": "miskiparqueop.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:467570912555:android:1c33b846051167638e696e",
+        "mobilesdk_app_id": "1:580315170847:android:871984ce3623134f46ad2a",
         "android_client_info": {
           "package_name": "com.example.miskiparqueo"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBdjBEksV9K_dpJfnOcD8B3hBRpVmwJLR4"
+          "current_key": "AIzaSyCRKsOg815_gRZeP3Y2XVL5V8c8KIQ-XA8"
         }
       ],
       "services": {

@@ -1,10 +1,12 @@
 package com.example.miskiparqueo.di
 
+import com.example.miskiparqueo.feature.auth.login.data.datasource.LoginFirebaseDataSource
 import com.example.miskiparqueo.feature.auth.login.data.datasource.LoginRemoteDataSource
 import com.example.miskiparqueo.feature.auth.login.data.repository.AuthRepositoryImpl
 import com.example.miskiparqueo.feature.auth.login.domain.repository.IAuthRepository
 import com.example.miskiparqueo.feature.auth.login.domain.usecases.LoginUseCase
 import com.example.miskiparqueo.feature.auth.login.presentation.LoginViewModel
+import com.example.miskiparqueo.feature.auth.signup.data.datasource.SignUpFirebaseDataSource
 import com.example.miskiparqueo.feature.auth.signup.data.datasource.SignUpRemoteDataSource
 import com.example.miskiparqueo.feature.auth.signup.data.repository.SignUpRepositoryImpl
 import com.example.miskiparqueo.feature.auth.signup.domain.repository.ISignUpRepository
@@ -16,11 +18,11 @@ import org.koin.dsl.module
 val authModule = module {
 
     //================================================
-    // SIGN UP DEPENDENCIES
+    // SIGN UP DEPENDENCIES (Firebase)
     //================================================
 
-    // DataSource
-    single { SignUpRemoteDataSource() }
+    // DataSource - Firebase
+    single { SignUpFirebaseDataSource() }
 
     // Repository
     single<ISignUpRepository> { SignUpRepositoryImpl(get()) }
@@ -33,11 +35,11 @@ val authModule = module {
 
 
     //================================================
-    // LOG IN DEPENDENCIES
+    // LOG IN DEPENDENCIES (Firebase)
     //================================================
 
-    // DataSource
-    single { LoginRemoteDataSource() }
+    // DataSource - Firebase
+    single { LoginFirebaseDataSource    () }
 
     // Repository
     single<IAuthRepository> { AuthRepositoryImpl(get()) }
