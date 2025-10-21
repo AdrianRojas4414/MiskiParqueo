@@ -1,6 +1,7 @@
 package com.example.miskiparqueo.feature.auth.login.data.repository
 
 import com.example.miskiparqueo.feature.auth.domain.model.UserModel
+import com.example.miskiparqueo.feature.auth.login.data.datasource.LoginFirebaseDataSource
 import com.example.miskiparqueo.feature.auth.login.data.datasource.LoginRemoteDataSource
 import com.example.miskiparqueo.feature.auth.login.domain.repository.IAuthRepository
 import com.example.miskiparqueo.feature.auth.signup.domain.model.vo.Email
@@ -10,12 +11,12 @@ import com.example.miskiparqueo.feature.auth.signup.domain.model.vo.Password
 import com.example.miskiparqueo.feature.auth.signup.domain.model.vo.Username
 
 class AuthRepositoryImpl(
-    private val remoteDataSource: LoginRemoteDataSource
+    private val firebaseDataSource: LoginFirebaseDataSource
 ) : IAuthRepository {
 
     override suspend fun login(credential: String, password: Password): Result<UserModel> {
         return try {
-            val result = remoteDataSource.login(credential, password.value)
+            val result = firebaseDataSource.login(credential, password.value)
 
             result.map { response ->
                 // Mapeo del DTO de datos (LoginResponse) al Modelo de Dominio (User)

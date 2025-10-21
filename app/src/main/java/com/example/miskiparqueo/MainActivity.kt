@@ -13,10 +13,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.miskiparqueo.navigation.AppNavigation
 import com.example.miskiparqueo.ui.theme.MiskiParqueoTheme
+import com.example.miskiparqueo.utils.FirebaseInitializer
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        FirebaseInitializer.initializeTestUsers()
+
         setContent {
             AppNavigation()
         }
