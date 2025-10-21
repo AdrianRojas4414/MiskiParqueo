@@ -21,13 +21,10 @@ val authModule = module {
 
     // DataSource
     single { SignUpRemoteDataSource() }
-
     // Repository
     single<ISignUpRepository> { SignUpRepositoryImpl(get()) }
-
     // UseCase
     single { SignUpUseCase(get()) }
-
     // ViewModel
     viewModel { SignUpViewModel(get()) }
 
@@ -38,13 +35,10 @@ val authModule = module {
 
     // DataSource
     single { LoginRemoteDataSource() }
-
     // Repository
     single<IAuthRepository> { AuthRepositoryImpl(get()) }
-
     // UseCase
     single { LoginUseCase(get()) }
-
     // ViewModel
     viewModel { LoginViewModel(get()) }
 }

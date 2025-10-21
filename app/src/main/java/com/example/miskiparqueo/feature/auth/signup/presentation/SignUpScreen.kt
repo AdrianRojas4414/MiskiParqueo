@@ -30,7 +30,7 @@ fun SignUpScreen(
     modifier: Modifier = Modifier,
     vm: SignUpViewModel = koinViewModel(),
     onNavigateToLogin: () -> Unit,
-    //onNavigateToMap: () -> Unit
+    onNavigateToMap: () -> Unit
 ) {
     var firstName by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
@@ -45,7 +45,7 @@ fun SignUpScreen(
     // Manejar navegación en Success
     LaunchedEffect(state) {
         if (state is SignUpViewModel.SignUpStateUI.Success) {
-            //onNavigateToMap()
+            onNavigateToMap()
         }
     }
 
