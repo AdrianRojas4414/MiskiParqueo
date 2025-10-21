@@ -79,12 +79,12 @@ dependencies {
     // Google Maps para Jetpack Compose
     // Maps Compose
     implementation("com.google.maps.android:maps-compose:4.3.3")
-
     // Optional: Utilities for clustering, etc.
     implementation("com.google.maps.android:maps-compose-utils:4.3.3")
-
     // Optional: Widgets like ScaleBar
     implementation("com.google.maps.android:maps-compose-widgets:4.3.3")
+    //LOCALIZACION
+    implementation("com.google.android.gms:play-services-location:21.3.0")
 
 
     implementation("androidx.compose.material:material-icons-extended:1.7.8")

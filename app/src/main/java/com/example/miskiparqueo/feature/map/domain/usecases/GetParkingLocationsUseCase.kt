@@ -1,4 +1,4 @@
-package com.example.miskiparqueo.feature.map.domain.usecase
+package com.example.miskiparqueo.feature.map.domain.usecases
 
 import com.example.miskiparqueo.feature.map.domain.model.ParkingLocationModel
 import com.example.miskiparqueo.feature.map.domain.repository.IParkingRepository

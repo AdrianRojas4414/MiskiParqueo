@@ -3,7 +3,7 @@ package com.example.miskiparqueo.feature.map.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.miskiparqueo.feature.map.domain.model.ParkingLocationModel
-import com.example.miskiparqueo.feature.map.domain.usecase.GetParkingLocationsUseCase
+import com.example.miskiparqueo.feature.map.domain.usecases.GetParkingLocationsUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
