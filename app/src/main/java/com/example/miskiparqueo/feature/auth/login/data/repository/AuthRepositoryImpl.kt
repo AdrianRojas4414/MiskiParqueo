@@ -2,7 +2,6 @@ package com.example.miskiparqueo.feature.auth.login.data.repository
 
 import com.example.miskiparqueo.feature.auth.domain.model.UserModel
 import com.example.miskiparqueo.feature.auth.login.data.datasource.LoginFirebaseDataSource
-import com.example.miskiparqueo.feature.auth.login.data.datasource.LoginRemoteDataSource
 import com.example.miskiparqueo.feature.auth.login.domain.repository.IAuthRepository
 import com.example.miskiparqueo.feature.auth.signup.domain.model.vo.Email
 import com.example.miskiparqueo.feature.auth.signup.domain.model.vo.FirstName
@@ -30,6 +29,24 @@ class AuthRepositoryImpl(
             }
         } catch (e: Exception) {
             // Capturar cualquier excepción y devolverla como un fallo
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getUserById(userId: String): Result<UserModel> {
+        return try {
+            val result = firebaseDataSource.getUserById(userId)
+            result.map { response ->
+                // Mapeo del DTO al Modelo de Dominio
+                UserModel(
+                    userId = response.userId,
+                    firstName = FirstName.create(response.firstName),
+                    lastName = LastName.create(response.lastName),
+                    username = Username.create(response.username),
+                    email = Email.create(response.email)
+                )
+            }
+        } catch (e: Exception) {
             Result.failure(e)
         }
     }

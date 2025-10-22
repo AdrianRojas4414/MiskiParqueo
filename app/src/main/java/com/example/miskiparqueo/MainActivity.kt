@@ -19,7 +19,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        FirebaseInitializer.initializeTestUsers()
+        //FirebaseInitializer.initializeTestUsers()
 
         setContent {
             AppNavigation()
