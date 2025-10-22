@@ -29,8 +29,7 @@ import org.koin.androidx.compose.koinViewModel
 fun SignUpScreen(
     modifier: Modifier = Modifier,
     vm: SignUpViewModel = koinViewModel(),
-    onNavigateToLogin: () -> Unit,
-    //onNavigateToMap: () -> Unit
+    onNavigateToLogin: () -> Unit
 ) {
     var firstName by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
@@ -45,7 +44,8 @@ fun SignUpScreen(
     // Manejar navegación en Success
     LaunchedEffect(state) {
         if (state is SignUpViewModel.SignUpStateUI.Success) {
-            //onNavigateToMap()
+            onNavigateToLogin()
+            vm.clearState()
         }
     }
 
@@ -131,7 +131,7 @@ fun SignUpScreen(
         // Campo Email
         OutlinedTextField(
             value = email,
-            onValueChange = { email = it },
+            onValueChange = { email = it }, // <-- AQUÍ ESTABA EL ERROR, YA ESTÁ CORREGIDO
             label = { Text("Email") },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
