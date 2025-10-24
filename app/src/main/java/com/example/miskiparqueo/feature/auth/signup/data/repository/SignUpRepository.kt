@@ -1,5 +1,6 @@
 package com.example.miskiparqueo.feature.auth.signup.data.repository
 
+import com.example.miskiparqueo.feature.auth.signup.data.datasource.SignUpFirebaseDataSource
 import com.example.miskiparqueo.feature.auth.signup.data.datasource.SignUpRemoteDataSource
 import com.example.miskiparqueo.feature.auth.signup.domain.model.UserSignUpModel
 import com.example.miskiparqueo.feature.auth.signup.domain.model.vo.Email
@@ -10,7 +11,7 @@ import com.example.miskiparqueo.feature.auth.signup.domain.model.vo.Username
 import com.example.miskiparqueo.feature.auth.signup.domain.repository.ISignUpRepository
 
 class SignUpRepositoryImpl(
-    private val remoteDataSource: SignUpRemoteDataSource
+    private val firebaseDataSource: SignUpFirebaseDataSource
 ) : ISignUpRepository {
 
     override suspend fun signUp(
@@ -21,7 +22,7 @@ class SignUpRepositoryImpl(
         password: Password
     ): Result<UserSignUpModel> {
         return try {
-            val result = remoteDataSource.signUp(
+            val result = firebaseDataSource.signUp(
                 firstName = firstName.value,
                 lastName = lastName.value,
                 username = username,

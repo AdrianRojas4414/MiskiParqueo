@@ -1,6 +1,7 @@
 // build.gradle.kts (:app)
 
 import java.util.Properties
+import java.io.FileInputStream
 
 // Cargar propiedades locales
 val localProperties = Properties()
@@ -13,7 +14,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    //alias(libs.plugins.google.gms.google.services)
+    alias(libs.plugins.google.gms.google.services)
     alias(libs.plugins.ksp)
 }
 
@@ -29,8 +30,13 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-        manifestPlaceholders["MAPS_API_KEY"] = localProperties.getProperty("MAPS_API_KEY") ?: ""
+        val localProperties = Properties()
+        val localPropertiesFile = rootProject.file("local.properties")
+        if (localPropertiesFile.exists()) {
+            localPropertiesFile.inputStream().use { localProperties.load(it) }
+        }
+        val mapsApiKey = localProperties.getProperty("MAPS_API_KEY") ?: ""
+        manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
     }
 
     buildTypes {
@@ -72,9 +78,9 @@ dependencies {
     implementation (libs.koin.androidx.compose)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.converter.gson)
-    //ACTIVAR CUANDO LOS DATOS YA NO ESTEN HARDCODE
-    //implementation(libs.firebase.database)
-    //implementation(libs.firebase.messaging)
+    implementation(libs.firebase.database)
+    implementation(libs.firebase.messaging)
+    implementation(libs.firebase.bom)
 
     // Google Maps para Jetpack Compose
     // Maps Compose
