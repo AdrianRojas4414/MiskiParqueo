@@ -1,3 +1,15 @@
+// build.gradle.kts (:app)
+
+import java.util.Properties
+import java.io.FileInputStream
+
+// Cargar propiedades locales
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(localPropertiesFile.inputStream())
+}
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -18,6 +30,13 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        val localProperties = Properties()
+        val localPropertiesFile = rootProject.file("local.properties")
+        if (localPropertiesFile.exists()) {
+            localPropertiesFile.inputStream().use { localProperties.load(it) }
+        }
+        val mapsApiKey = localProperties.getProperty("MAPS_API_KEY") ?: ""
+        manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
     }
 
     buildTypes {
@@ -62,6 +81,16 @@ dependencies {
     implementation(libs.firebase.database)
     implementation(libs.firebase.messaging)
     implementation(libs.firebase.bom)
+
+    // Google Maps para Jetpack Compose
+    // Maps Compose
+    implementation("com.google.maps.android:maps-compose:4.3.3")
+    // Optional: Utilities for clustering, etc.
+    implementation("com.google.maps.android:maps-compose-utils:4.3.3")
+    // Optional: Widgets like ScaleBar
+    implementation("com.google.maps.android:maps-compose-widgets:4.3.3")
+    //LOCALIZACION
+    implementation("com.google.android.gms:play-services-location:21.3.0")
 
     implementation("androidx.compose.material:material-icons-extended:1.7.8")
 

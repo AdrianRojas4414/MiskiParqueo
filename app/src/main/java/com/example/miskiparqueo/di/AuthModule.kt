@@ -43,10 +43,8 @@ val authModule = module {
 
     // Repository
     single<IAuthRepository> { AuthRepositoryImpl(get()) }
-
     // UseCase
     single { LoginUseCase(get()) }
-
     // ViewModel
     viewModel { LoginViewModel(get()) }
 }

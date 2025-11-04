@@ -29,8 +29,8 @@ import org.koin.androidx.compose.koinViewModel
 fun LoginScreen(
     modifier: Modifier = Modifier,
     vm: LoginViewModel = koinViewModel(),
-    // onNavigateToMap: () -> Unit,
-    onNavigateToSignUp: () -> Unit
+    onNavigateToSignUp: () -> Unit,
+    onNavigateToMap: () -> Unit
 ) {
     var credential by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -41,7 +41,7 @@ fun LoginScreen(
 
     LaunchedEffect(state) {
         if (state is LoginViewModel.LoginStateUI.Success) {
-            // onNavigateToMap()
+            onNavigateToMap()
         }
     }
 

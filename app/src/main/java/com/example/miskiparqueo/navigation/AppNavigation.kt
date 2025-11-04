@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.miskiparqueo.feature.auth.login.presentation.LoginScreen
 import com.example.miskiparqueo.feature.auth.signup.presentation.SignUpScreen
+import com.example.miskiparqueo.feature.map.presentation.MapScreen
 
 @Composable
 fun AppNavigation(){
@@ -27,7 +28,14 @@ fun AppNavigation(){
                     onNavigateToSignUp = {
                         navController.navigate(Screen.SignupScreen.route)
                     },
-                    // onNavigateToMap = { /* TODO: Navegar al mapa limpiando el stack */ }
+                    onNavigateToMap = {
+                        navController.navigate(Screen.MapScreen.route) {
+                            // Limpiamos el stack para que el usuario no pueda "volver" al login
+                            popUpTo(Screen.LoginScreen.route) {
+                                inclusive = true
+                            }
+                        }
+                    }
                 )
             }
         }
@@ -40,8 +48,21 @@ fun AppNavigation(){
                     onNavigateToLogin = {
                         navController.navigate(Screen.LoginScreen.route)
                     },
-                    // onNavigateToMap = { /* TODO: Navegar al mapa limpiando el stack */ }
+                    onNavigateToMap = {
+                        navController.navigate(Screen.MapScreen.route) {
+                            // Limpiamos el stack (hasta el login, que es la raíz de auth)
+                            popUpTo(Screen.LoginScreen.route) {
+                                inclusive = true
+                            }
+                        }
+                    }
                 )
+            }
+        }
+
+        composable(Screen.MapScreen.route) {
+            Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                MapScreen(modifier = Modifier.padding(innerPadding))
             }
         }
     }
