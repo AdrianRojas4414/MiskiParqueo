@@ -96,6 +96,7 @@ dependencies {
 
     //local bundle room
     implementation(libs.bundles.local)
+    implementation(libs.play.services.maps)
     annotationProcessor(libs.room.compiler)
     ksp(libs.room.compiler)
     testImplementation(libs.room.testing)

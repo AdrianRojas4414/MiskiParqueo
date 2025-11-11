@@ -30,7 +30,7 @@ fun LoginScreen(
     modifier: Modifier = Modifier,
     vm: LoginViewModel = koinViewModel(),
     onNavigateToSignUp: () -> Unit,
-    onNavigateToMap: () -> Unit
+    onNavigateToMap: (userId: String) -> Unit
 ) {
     var credential by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -41,7 +41,9 @@ fun LoginScreen(
 
     LaunchedEffect(state) {
         if (state is LoginViewModel.LoginStateUI.Success) {
-            onNavigateToMap()
+            val userId = (state as LoginViewModel.LoginStateUI.Success).user.userId
+            onNavigateToMap(userId) // Pasar el userId
+            vm.clearState()
         }
     }
 
