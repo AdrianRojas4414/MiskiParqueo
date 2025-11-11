@@ -53,7 +53,8 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun MapScreen(
     modifier: Modifier = Modifier,
-    vm: MapViewModel = koinViewModel()
+    vm: MapViewModel = koinViewModel(),
+    onNavigateToProfile: () -> Unit
 ) {
     // 1. MANEJO DE PERMISOS
     var hasLocationPermission by remember { mutableStateOf(false) }
@@ -166,7 +167,7 @@ fun MapScreen(
 
                 // Botón de Perfil (Esquina superior derecha)
                 IconButton(
-                    onClick = { /* TODO: Navegar al perfil */ },
+                    onClick = onNavigateToProfile, // CAMBIAR: usar el callback
                     modifier = Modifier
                         .align(Alignment.TopEnd)
                         .padding(top = 16.dp, end = 16.dp)

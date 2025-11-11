@@ -20,7 +20,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         //FirebaseInitializer.initializeTestUsers()
-        FirebaseInitializer.initializeTestUsers()
 
         setContent {
             AppNavigation()

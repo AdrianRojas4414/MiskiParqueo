@@ -6,6 +6,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
+import kotlinx.coroutines.tasks.await
 
 class LoginFirebaseDataSource {
     private val database = FirebaseDatabase.getInstance()
@@ -70,11 +71,25 @@ class LoginFirebaseDataSource {
             })
         }
 
+    suspend fun getUserById(userId: String): Result<LoginResponse> {
+        return try {
+            val snapshot = usersRef.child(userId).get().await()
+            val user = snapshot.getValue(LoginResponse::class.java)
+            if (user != null) {
+                Result.success(user)
+            } else {
+                Result.failure(Exception("Usuario no encontrado."))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
     data class LoginResponse(
-        val userId: String,
-        val firstName: String,
-        val lastName: String,
-        val username: String,
-        val email: String
+        var userId: String = "",
+        var firstName: String = "",
+        var lastName: String = "",
+        var username: String = "",
+        var email: String = ""
     )
 }

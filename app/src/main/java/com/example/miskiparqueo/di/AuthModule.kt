@@ -14,6 +14,7 @@ import com.example.miskiparqueo.feature.auth.signup.domain.usecases.SignUpUseCas
 import com.example.miskiparqueo.feature.auth.signup.presentation.SignUpViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
+import com.example.miskiparqueo.feature.auth.domain.usecases.GetUserByIdUseCase
 
 val authModule = module {
 
@@ -45,6 +46,7 @@ val authModule = module {
     single<IAuthRepository> { AuthRepositoryImpl(get()) }
     // UseCase
     single { LoginUseCase(get()) }
+    single { GetUserByIdUseCase(get()) }
     // ViewModel
     viewModel { LoginViewModel(get()) }
 }
