@@ -30,7 +30,7 @@ fun SignUpScreen(
     modifier: Modifier = Modifier,
     vm: SignUpViewModel = koinViewModel(),
     onNavigateToLogin: () -> Unit,
-    onNavigateToMap: () -> Unit
+    onNavigateToMap: (userId: String) -> Unit
 ) {
     var firstName by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
@@ -45,7 +45,9 @@ fun SignUpScreen(
     // Manejar navegación en Success
     LaunchedEffect(state) {
         if (state is SignUpViewModel.SignUpStateUI.Success) {
-            onNavigateToMap()
+            val userId = (state as SignUpViewModel.SignUpStateUI.Success).user.userId
+            onNavigateToMap(userId) // Pasar el userId
+            vm.clearState()
         }
     }
 

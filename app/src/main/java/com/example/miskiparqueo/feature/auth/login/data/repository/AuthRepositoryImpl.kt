@@ -33,4 +33,21 @@ class AuthRepositoryImpl(
             Result.failure(e)
         }
     }
+
+    override suspend fun getUserById(userId: String): Result<UserModel> {
+        return try {
+            val result = firebaseDataSource.getUserById(userId)
+            result.map { response ->
+                UserModel(
+                    userId = response.userId,
+                    firstName = FirstName.create(response.firstName),
+                    lastName = LastName.create(response.lastName),
+                    username = Username.create(response.username),
+                    email = Email.create(response.email)
+                )
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }
