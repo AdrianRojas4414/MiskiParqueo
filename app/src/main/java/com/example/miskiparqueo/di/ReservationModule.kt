@@ -10,6 +10,7 @@ import com.example.miskiparqueo.feature.reservation.domain.usecases.ObserveActiv
 import com.example.miskiparqueo.feature.reservation.presentation.ReservationConfirmViewModel
 import com.example.miskiparqueo.feature.reservation.presentation.ReservationListViewModel
 import com.example.miskiparqueo.feature.reservation.presentation.ReservationViewModel
+import com.example.miskiparqueo.feature.reservation.presentation.model.ReservationConfirmArgs
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -28,14 +29,14 @@ val reservationModule = module {
         )
     }
 
-    viewModel { (userId: String, parkingId: String, date: String, entryTime: String, exitTime: String, totalCost: Double) ->
+    viewModel { (args: ReservationConfirmArgs) ->
         ReservationConfirmViewModel(
-            userId = userId,
-            parkingId = parkingId,
-            dateIso = date,
-            entryTimeIso = entryTime,
-            exitTimeIso = exitTime,
-            totalCost = totalCost,
+            userId = args.userId,
+            parkingId = args.parkingId,
+            dateIso = args.dateIso,
+            entryTimeIso = args.entryTimeIso,
+            exitTimeIso = args.exitTimeIso,
+            totalCost = args.totalCost,
             getReservationDetailUseCase = get(),
             confirmReservationUseCase = get()
         )

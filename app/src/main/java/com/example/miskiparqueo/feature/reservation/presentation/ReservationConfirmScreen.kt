@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.miskiparqueo.feature.reservation.presentation.model.ReservationConfirmArgs
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -40,7 +41,18 @@ fun ReservationConfirmScreen(
     onNavigateBack: () -> Unit,
     onReservationConfirmed: () -> Unit,
     vm: ReservationConfirmViewModel = koinViewModel(
-        parameters = { parametersOf(userId, parkingId, dateIso, entryTimeIso, exitTimeIso, totalCost) }
+        parameters = {
+            parametersOf(
+                ReservationConfirmArgs(
+                    userId = userId,
+                    parkingId = parkingId,
+                    dateIso = dateIso,
+                    entryTimeIso = entryTimeIso,
+                    exitTimeIso = exitTimeIso,
+                    totalCost = totalCost
+                )
+            )
+        }
     )
 ) {
     val state by vm.uiState.collectAsState()
