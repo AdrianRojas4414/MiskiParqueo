@@ -1,7 +1,7 @@
 package com.example.miskiparqueo.feature.reservation.presentation
 
+import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -37,6 +37,8 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.miskiparqueo.feature.reservation.presentation.model.ReservationConfirmArgs
+import androidx.compose.runtime.remember
+import androidx.compose.ui.graphics.graphicsLayer
 import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -185,16 +187,19 @@ private fun SummaryItem(label: String, value: String) {
 private fun SuccessConfirmationOverlay(visible: Boolean) {
     if (!visible) return
 
-    val scale by animateFloatAsState(
-        targetValue = if (visible) 1f else 0.8f,
-        animationSpec = spring(dampingRatio = Spring.DampingRatioLowBouncy, stiffness = Spring.StiffnessLow),
-        label = "checkScale"
-    )
-    val alpha by animateFloatAsState(
-        targetValue = if (visible) 1f else 0f,
-        animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy),
-        label = "checkAlpha"
-    )
+    val scale = remember { Animatable(0f) }
+    LaunchedEffect(Unit) {
+        scale.snapTo(0f)
+        scale.animateTo(
+            targetValue = 1f,
+            animationSpec = spring(
+                dampingRatio = Spring.DampingRatioLowBouncy,
+                stiffness = Spring.StiffnessMediumLow
+            )
+        )
+    }
+
+    val alpha = scale.value.coerceIn(0f, 1f)
 
     Box(
         modifier = Modifier
@@ -206,9 +211,8 @@ private fun SuccessConfirmationOverlay(visible: Boolean) {
             modifier = Modifier
                 .size(170.dp)
                 .graphicsLayer {
-                    scaleX = scale
-                    scaleY = scale
-                    this.alpha = alpha
+                    scaleX = scale.value
+                    scaleY = scale.value
                 }
                 .background(Color(0xFF2E7D32), shape = CircleShape),
             contentAlignment = Alignment.Center
