@@ -22,52 +22,52 @@ class ParkingExtrasDataSource {
         // 2. Usa el nombre del archivo sin extensión en imageName (ej. "parqueo_centro").
         private val PARKING_EXTRAS = mapOf(
             "park_001" to ParkingExtrasDto(
-                imageName = "img_parking_default",
+                imageName = "parqueo1",
                 amenities = listOf("Seguridad 24/7", "C\u00e1maras CCTV", "Ba\u00f1os", "Pago con QR"),
                 description = "Ubicado frente a la plaza principal con vigilancia constante."
             ),
             "park_002" to ParkingExtrasDto(
-                imageName = "img_parking_default",
+                imageName = "parqueo2",
                 amenities = listOf("Techo cubierto", "Lavado express", "Ba\u00f1os"),
                 description = "Ideal para compras r\u00e1pidas en la zona de las Hero\u00ednas."
             ),
             "park_003" to ParkingExtrasDto(
-                imageName = "img_parking_default",
+                imageName = "parqueo3",
                 amenities = listOf("Amplios espacios", "Iluminaci\u00f3n LED", "Personal en sitio"),
                 description = "Espacios amplios para camionetas a pocos pasos de La Cancha."
             ),
             "park_004" to ParkingExtrasDto(
-                imageName = "img_parking_default",
+                imageName = "parqueo4",
                 amenities = listOf("Conexi\u00f3n directa al mall", "Cargadores EV", "Espacios premium"),
                 description = "Dentro del Mall Aventura con acceso techado."
             ),
             "park_005" to ParkingExtrasDto(
-                imageName = "img_parking_default",
+                imageName = "parqueo5",
                 amenities = listOf("Seguridad privada", "Ba\u00f1os", "Estacionamiento cubierto"),
                 description = "Parqueo acogedor en la zona Cala Cala."
             ),
             "park_006" to ParkingExtrasDto(
-                imageName = "img_parking_default",
+                imageName = "parqueo6",
                 amenities = listOf("Vista panor\u00e1mica", "Pago con tarjeta", "Cafeter\u00eda cercana"),
                 description = "Excelente opci\u00f3n al visitar el Cristo de la Concordia."
             ),
             "park_007" to ParkingExtrasDto(
-                imageName = "img_parking_default",
+                imageName = "parqueo7",
                 amenities = listOf("24 horas", "Iluminaci\u00f3n LED", "Ba\u00f1os"),
                 description = "Operativo todo el d\u00eda junto a la terminal."
             ),
             "park_008" to ParkingExtrasDto(
-                imageName = "img_parking_default",
+                imageName = "parqueo8",
                 amenities = listOf("Cobertura techada", "Vigilancia privada", "Pago con QR"),
                 description = "Ideal para visitas al mercado San Sebasti\u00e1n."
             ),
             "park_009" to ParkingExtrasDto(
-                imageName = "img_parking_default",
+                imageName = "parqueo9",
                 amenities = listOf("Descuentos para estudiantes", "Bicicletero", "Camaras"),
                 description = "Preferido por universitarios de la UMSS."
             ),
             "park_010" to ParkingExtrasDto(
-                imageName = "img_parking_default",
+                imageName = "parqueo10",
                 amenities = listOf("Seguridad 24/7", "Espacios amplios", "Pago con tarjeta"),
                 description = "El parqueo central de Quillacollo."
             )
