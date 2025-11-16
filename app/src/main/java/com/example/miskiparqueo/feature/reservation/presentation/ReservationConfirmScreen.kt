@@ -1,14 +1,23 @@
 package com.example.miskiparqueo.feature.reservation.presentation
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -30,6 +39,7 @@ import com.example.miskiparqueo.feature.reservation.presentation.model.Reservati
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
+@OptIn(ExperimentalMaterial3Api::class)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReservationConfirmScreen(
@@ -61,6 +71,7 @@ fun ReservationConfirmScreen(
 
     LaunchedEffect(state.success) {
         if (state.success) {
+            delay(1200)
             vm.consumeSuccess()
             onReservationConfirmed()
         }
@@ -82,12 +93,13 @@ fun ReservationConfirmScreen(
             )
         }
     ) { innerPadding ->
-        when {
-            state.isLoading -> {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding),
+        Box(modifier = Modifier.fillMaxSize()) {
+            when {
+                state.isLoading -> {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
@@ -152,6 +164,11 @@ fun ReservationConfirmScreen(
                         }
                     }
                 }
+                }
+            }
+
+            if (state.success) {
+                SuccessConfirmationOverlay()
             }
         }
     }
@@ -162,5 +179,35 @@ private fun SummaryItem(label: String, value: String) {
     Column(modifier = Modifier.padding(vertical = 4.dp)) {
         Text(text = label, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         Text(text = value, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+    }
+}
+
+@Composable
+private fun SuccessConfirmationOverlay() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black.copy(alpha = 0.5f)),
+        contentAlignment = Alignment.Center
+    ) {
+        AnimatedVisibility(
+            visible = true,
+            enter = scaleIn(initialScale = 0.6f, animationSpec = tween(400)) + fadeIn(tween(400)),
+            exit = fadeOut()
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(170.dp)
+                    .background(Color(0xFF2E7D32), shape = CircleShape),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Default.CheckCircle,
+                    contentDescription = "Reserva confirmada",
+                    tint = Color.White,
+                    modifier = Modifier.size(110.dp)
+                )
+            }
+        }
     }
 }
