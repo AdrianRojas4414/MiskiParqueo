@@ -65,10 +65,6 @@ class ReservationViewModel(
         )
     }
 
-    fun onReserve() {
-        // TODO: Conectar con el backend para confirmar la reserva
-    }
-
     private fun loadReservationDetail() {
         viewModelScope.launch {
             _uiState.value = ReservationUiState(isLoading = true)

@@ -368,20 +368,41 @@ fun MapScreen(
                     }
                 }
 
-                // BOTÓN DE PERFIL
-                IconButton(
-                    onClick = onNavigateToProfile,
+                Box(
                     modifier = Modifier
                         .align(Alignment.TopEnd)
                         .padding(top = 16.dp, end = 16.dp)
-                        .size(48.dp)
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.AccountCircle,
-                        contentDescription = "Perfil",
-                        modifier = Modifier.fillMaxSize(),
-                        tint = Color.DarkGray
-                    )
+                    IconButton(
+                        onClick = { showProfileMenu = true },
+                        modifier = Modifier.size(48.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.AccountCircle,
+                            contentDescription = "Perfil",
+                            modifier = Modifier.fillMaxSize(),
+                            tint = Color.DarkGray
+                        )
+                    }
+                    DropdownMenu(
+                        expanded = showProfileMenu,
+                        onDismissRequest = { showProfileMenu = false }
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text("Perfil") },
+                            onClick = {
+                                showProfileMenu = false
+                                onNavigateToProfile()
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Reservas") },
+                            onClick = {
+                                showProfileMenu = false
+                                onNavigateToReservations()
+                            }
+                        )
+                    }
                 }
 
                 // BOTÓN "CENTRAR UBICACIÓN GPS"

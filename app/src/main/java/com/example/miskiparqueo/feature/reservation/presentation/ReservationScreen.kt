@@ -63,8 +63,10 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun ReservationScreen(
     modifier: Modifier = Modifier,
+    userId: String,
     parkingId: String,
     onNavigateBack: () -> Unit,
+    onNavigateToConfirm: (String, String, String, String, String, Double) -> Unit,
     vm: ReservationViewModel = koinViewModel(parameters = { parametersOf(parkingId) })
 ) {
     val state by vm.uiState.collectAsState()
@@ -89,7 +91,16 @@ fun ReservationScreen(
         bottomBar = {
             ReservationBottomBar(
                 state = state,
-                onReserve = vm::onReserve
+                onReserve = {
+                    onNavigateToConfirm(
+                        userId,
+                        parkingId,
+                        state.selectedDate.toString(),
+                        state.entryTime.toString(),
+                        state.exitTime.toString(),
+                        state.totalCost
+                    )
+                }
             )
         }
     ) { innerPadding ->
