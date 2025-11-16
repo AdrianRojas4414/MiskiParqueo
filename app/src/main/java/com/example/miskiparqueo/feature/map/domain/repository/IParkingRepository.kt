@@ -4,4 +4,5 @@ import com.example.miskiparqueo.feature.map.domain.model.ParkingLocationModel
 
 interface IParkingRepository {
     suspend fun getParkingLocations(): Result<List<ParkingLocationModel>>
+    suspend fun getParkingById(parkingId: String): Result<ParkingLocationModel>
 }

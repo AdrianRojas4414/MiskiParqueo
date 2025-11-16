@@ -44,8 +44,8 @@ import org.koin.androidx.compose.koinViewModel
 fun MapScreen(
     modifier: Modifier = Modifier,
     vm: MapViewModel = koinViewModel(),
-    onNavigateToProfile: () -> Unit//,
-    //onNavigateToReservation: (String) -> Unit
+    onNavigateToProfile: () -> Unit,
+    onNavigateToReservation: (String) -> Unit
 ) {
     // 1. PERMISOS DE UBICACIÓN
     var hasLocationPermission by remember { mutableStateOf(false) }
@@ -156,8 +156,10 @@ fun MapScreen(
                             vm.cancelParkingSelection()
                             destinationQuery = ""
                             shouldSearch = true
-                        }//,
-                        //onReserve = { onNavigateToReservation(currentState.routeInfo.destination.id) }
+                        },
+                        onReserve = {
+                            onNavigateToReservation(currentState.routeInfo.destination.id)
+                        }
                     )
                 }
                 else -> {
@@ -567,7 +569,7 @@ fun SearchSuggestions(
 fun ParkingDetailsBottomSheet(
     routeInfo: com.example.miskiparqueo.feature.map.domain.model.RouteInfoModel,
     onCancel: () -> Unit,
-    //onReserve: () -> Unit
+    onReserve: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -634,7 +636,7 @@ fun ParkingDetailsBottomSheet(
                 Text("Cancelar")
             }
             Button(
-                onClick = onCancel,
+                onClick = onReserve,
                 modifier = Modifier.weight(1f),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xFFFFEB3B)

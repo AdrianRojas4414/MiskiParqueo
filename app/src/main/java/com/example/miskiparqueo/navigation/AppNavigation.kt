@@ -17,6 +17,7 @@ import com.example.miskiparqueo.feature.map.presentation.MapScreen
 import com.example.miskiparqueo.feature.profile.presentation.changepassword.ChangePasswordScreen
 import com.example.miskiparqueo.feature.profile.presentation.profile.ProfileScreen
 import com.example.miskiparqueo.feature.profile.presentation.profile.ProfileViewModel
+import com.example.miskiparqueo.feature.reservation.presentation.ReservationScreen
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -72,8 +73,10 @@ fun AppNavigation(){
                     modifier = Modifier.padding(innerPadding),
                     onNavigateToProfile = {
                         navController.navigate("${Screen.ProfileScreen.route}/$userId")
-                    }//,
-                    //onNavigateToReservation = TODO()
+                    },
+                    onNavigateToReservation = { parkingId ->
+                        navController.navigate("${Screen.ReservationScreen.route}/$userId/$parkingId")
+                    }
                 )
             }
         }
@@ -114,6 +117,21 @@ fun AppNavigation(){
             val userId = backStackEntry.arguments?.getString("userId") ?: ""
             ChangePasswordScreen(
                 loggedInUserId = userId,
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
+
+        composable(
+            route = "${Screen.ReservationScreen.route}/{userId}/{parkingId}",
+            arguments = listOf(
+                navArgument("userId") { type = NavType.StringType },
+                navArgument("parkingId") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val parkingId = backStackEntry.arguments?.getString("parkingId") ?: return@composable
+            ReservationScreen(
+                modifier = Modifier.fillMaxSize(),
+                parkingId = parkingId,
                 onNavigateBack = { navController.popBackStack() }
             )
         }
