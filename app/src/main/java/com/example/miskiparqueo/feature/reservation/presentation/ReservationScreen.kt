@@ -91,6 +91,7 @@ fun ReservationScreen(
             )
         }
     ) { innerPadding ->
+        val errorMessage = state.errorMessage
         when {
             state.isLoading -> {
                 Box(
@@ -103,9 +104,9 @@ fun ReservationScreen(
                 }
             }
 
-            state.errorMessage != null -> {
+            errorMessage != null -> {
                 ErrorState(
-                    message = state.errorMessage,
+                    message = errorMessage,
                     onRetry = vm::reload,
                     modifier = Modifier
                         .fillMaxSize()
@@ -292,10 +293,10 @@ private fun ReservationContent(
             onClick = onPickExitTime
         )
 
-        if (state.validationError != null) {
+        state.validationError?.let { validationMessage ->
             Spacer(modifier = Modifier.height(12.dp))
             Text(
-                text = state.validationError,
+                text = validationMessage,
                 color = MaterialTheme.colorScheme.error,
                 style = MaterialTheme.typography.bodyMedium
             )

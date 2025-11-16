@@ -51,6 +51,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+        isCoreLibraryDesugaringEnabled = true
     }
     kotlinOptions {
         jvmTarget = "11"
@@ -100,6 +101,7 @@ dependencies {
     annotationProcessor(libs.room.compiler)
     ksp(libs.room.compiler)
     testImplementation(libs.room.testing)
+    coreLibraryDesugaring(libs.android.desugar.jdk)
 
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
