@@ -21,7 +21,7 @@ class ReservationRepositoryImpl(
                         Result.success(
                             ParkingReservationDetailModel(
                                 parking = parking,
-                                imageUrl = extras.imageUrl,
+                                imageName = extras.imageName,
                                 amenities = extras.amenities,
                                 description = extras.description
                             )

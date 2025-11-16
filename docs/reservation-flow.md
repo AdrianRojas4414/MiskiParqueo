@@ -85,3 +85,8 @@ Esta documentación resume dónde vive cada pieza del flujo y cómo se conectan.
 | Datos | `feature/reservation/data/...` | Repositorio + datasource mock |
 | Dominio | `feature/reservation/domain/...` | Modelo + usecase |
 | Presentación | `feature/reservation/presentation/...` | ViewModel + Compose screen |
+
+### Personalizar imágenes de parqueos
+1. Copia tus archivos `.png/.jpg/.webp` dentro de `app/src/main/res/drawable`.
+2. En `ParkingExtrasDataSource.kt` usa el nombre del archivo sin extensión dentro de `imageName`.
+3. La UI resolverá automáticamente ese recurso y lo mostrará como portada del parqueo (cae en `img_parking_default` si el nombre no existe).

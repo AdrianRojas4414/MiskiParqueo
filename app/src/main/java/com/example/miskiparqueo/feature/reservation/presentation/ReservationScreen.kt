@@ -2,6 +2,7 @@ package com.example.miskiparqueo.feature.reservation.presentation
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -29,13 +30,13 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -45,10 +46,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
+import com.example.miskiparqueo.R
 import com.example.miskiparqueo.feature.reservation.presentation.ReservationViewModel.ReservationUiState
 import java.time.LocalDate
 import java.time.LocalTime
@@ -187,6 +189,11 @@ private fun ReservationContent(
     val timeFormatter = remember { DateTimeFormatter.ofPattern("HH:mm") }
 
     Column(modifier = modifier) {
+        val context = LocalContext.current
+        val imageResId = remember(detail.imageName) {
+            context.resources.getIdentifier(detail.imageName, "drawable", context.packageName)
+        }.takeIf { it != 0 } ?: R.drawable.img_parking_default
+
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -194,8 +201,8 @@ private fun ReservationContent(
             shape = RoundedCornerShape(20.dp),
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
         ) {
-            AsyncImage(
-                model = detail.imageUrl,
+            Image(
+                painter = painterResource(id = imageResId),
                 contentDescription = detail.parking.name,
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
