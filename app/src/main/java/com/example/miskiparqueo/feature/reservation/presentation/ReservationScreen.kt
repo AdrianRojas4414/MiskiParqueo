@@ -236,7 +236,7 @@ private fun ReservationContent(
                 Column {
                     Text("Tarifa por hora", style = MaterialTheme.typography.bodySmall, color = Color.Gray)
                     Text(
-                        text = "Bs ${String.format(locale, \"%.2f\", detail.parking.pricePerHour)}",
+                        text = "Bs ${String.format(locale, "%.2f", detail.parking.pricePerHour)}",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold
                     )
@@ -419,13 +419,13 @@ private fun ReservationBottomBar(
                 Column {
                     Text("Costo estimado", style = MaterialTheme.typography.bodySmall, color = Color.Gray)
                     Text(
-                        text = "Bs ${String.format(Locale.getDefault(), \"%.2f\", state.totalCost)}",
+                        text = "Bs ${String.format(Locale.getDefault(), "%.2f", state.totalCost)}",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold
                     )
                 }
                 Text(
-                    text = "Tarifa x hora: Bs ${String.format(Locale.getDefault(), \"%.2f\", state.detail.parking.pricePerHour)}",
+                    text = "Tarifa x hora: Bs ${String.format(Locale.getDefault(), "%.2f", state.detail.parking.pricePerHour)}",
                     style = MaterialTheme.typography.bodySmall,
                     color = Color.Gray
                 )
