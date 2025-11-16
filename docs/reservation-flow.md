@@ -17,6 +17,10 @@ flowchart LR
 - **Archivo:** `feature/map/presentation/MapScreen.kt`
 - El `BottomSheet` muestra un botón *Reservar*. Al presionarlo se ejecuta `onNavigateToReservation(routeInfo.destination.id)`.
 - El mapper conserva el `parkingId` para saber cuál parqueo se reservará.
+- **Ruta completa del flujo inicial:**
+  1. `MapScreen` (`feature/map/presentation/MapScreen.kt`) → lanza `onNavigateToReservation`.
+  2. `AppNavigation` (`navigation/AppNavigation.kt`) → recibe `parkingId` y navega a `ReservationScreen`.
+  3. `ReservationScreen` (`feature/reservation/presentation/ReservationScreen.kt`) → crea `ReservationViewModel`.
 
 ## 2. Navegación
 - **Archivo:** `navigation/AppNavigation.kt`
@@ -75,9 +79,9 @@ Esta documentación resume dónde vive cada pieza del flujo y cómo se conectan.
 
 | Capa | Archivo | Descripción |
 | --- | --- | --- |
+| Map Feature | `feature/map/presentation/MapScreen.kt` | Botón reservar y llamada `onNavigateToReservation` |
 | Navegación | `navigation/AppNavigation.kt` | Ruta `reservation/{userId}/{parkingId}` |
 | DI | `di/ReservationModule.kt` | Define datasource, repo, usecase, VM |
 | Datos | `feature/reservation/data/...` | Repositorio + datasource mock |
 | Dominio | `feature/reservation/domain/...` | Modelo + usecase |
 | Presentación | `feature/reservation/presentation/...` | ViewModel + Compose screen |
-| Map Feature | `feature/map/presentation/MapScreen.kt` | Lanza navegación de reservas |
