@@ -11,6 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -29,6 +30,7 @@ import com.example.miskiparqueo.feature.reservation.presentation.model.Reservati
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReservationConfirmScreen(
     modifier: Modifier = Modifier,
@@ -117,8 +119,8 @@ fun ReservationConfirmScreen(
                             .padding(innerPadding)
                             .padding(24.dp)
                     ) {
-                        Text(detail.destination.name, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
-                        Text(detail.destination.address, style = MaterialTheme.typography.bodyMedium)
+                        Text(detail.parking.name, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+                        Text(detail.parking.address, style = MaterialTheme.typography.bodyMedium)
 
                         Spacer(modifier = Modifier.height(24.dp))
 

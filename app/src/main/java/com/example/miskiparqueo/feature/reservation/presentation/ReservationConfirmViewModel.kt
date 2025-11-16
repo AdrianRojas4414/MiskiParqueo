@@ -83,7 +83,7 @@ class ReservationConfirmViewModel(
 
             val request = ReservationRequestModel(
                 userId = userId,
-                parking = detail.destination,
+                parking = detail.parking,
                 date = reservationDate,
                 entryTime = reservationEntryTime,
                 exitTime = reservationExitTime,
