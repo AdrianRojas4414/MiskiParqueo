@@ -45,6 +45,7 @@ fun MapScreen(
     modifier: Modifier = Modifier,
     vm: MapViewModel = koinViewModel(),
     onNavigateToProfile: () -> Unit,
+    onNavigateToReservations: () -> Unit,
     onNavigateToReservation: (String) -> Unit
 ) {
     // 1. PERMISOS DE UBICACIÓN
@@ -73,6 +74,7 @@ fun MapScreen(
     var destinationQuery by remember { mutableStateOf("") }
     var isSelectingOrigin by remember { mutableStateOf(false) }
     var shouldSearch by remember { mutableStateOf(true) }
+    var showProfileMenu by remember { mutableStateOf(false) }
 
     // Cliente de ubicación
     val context = androidx.compose.ui.platform.LocalContext.current
