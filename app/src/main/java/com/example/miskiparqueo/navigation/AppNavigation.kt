@@ -72,7 +72,8 @@ fun AppNavigation(){
                     modifier = Modifier.padding(innerPadding),
                     onNavigateToProfile = {
                         navController.navigate("${Screen.ProfileScreen.route}/$userId")
-                    }
+                    }//,
+                    //onNavigateToReservation = TODO()
                 )
             }
         }
