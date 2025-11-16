@@ -1,10 +1,8 @@
 package com.example.miskiparqueo.feature.reservation.presentation
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -34,6 +33,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.miskiparqueo.feature.reservation.presentation.model.ReservationConfirmArgs
@@ -168,9 +168,7 @@ fun ReservationConfirmScreen(
                 }
             }
 
-            if (state.success) {
-                SuccessConfirmationOverlay()
-            }
+            SuccessConfirmationOverlay(visible = state.success)
         }
     }
 }
@@ -184,31 +182,43 @@ private fun SummaryItem(label: String, value: String) {
 }
 
 @Composable
-private fun SuccessConfirmationOverlay() {
+private fun SuccessConfirmationOverlay(visible: Boolean) {
+    if (!visible) return
+
+    val scale by animateFloatAsState(
+        targetValue = if (visible) 1f else 0.8f,
+        animationSpec = spring(dampingRatio = Spring.DampingRatioLowBouncy, stiffness = Spring.StiffnessLow),
+        label = "checkScale"
+    )
+    val alpha by animateFloatAsState(
+        targetValue = if (visible) 1f else 0f,
+        animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy),
+        label = "checkAlpha"
+    )
+
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black.copy(alpha = 0.5f)),
+            .background(Color.Black.copy(alpha = 0.5f * alpha)),
         contentAlignment = Alignment.Center
     ) {
-        AnimatedVisibility(
-            visible = true,
-            enter = scaleIn(initialScale = 0.6f, animationSpec = tween(400)) + fadeIn(tween(400)),
-            exit = fadeOut()
+        Box(
+            modifier = Modifier
+                .size(170.dp)
+                .graphicsLayer {
+                    scaleX = scale
+                    scaleY = scale
+                    this.alpha = alpha
+                }
+                .background(Color(0xFF2E7D32), shape = CircleShape),
+            contentAlignment = Alignment.Center
         ) {
-            Box(
-                modifier = Modifier
-                    .size(170.dp)
-                    .background(Color(0xFF2E7D32), shape = CircleShape),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.Default.CheckCircle,
-                    contentDescription = "Reserva confirmada",
-                    tint = Color.White,
-                    modifier = Modifier.size(110.dp)
-                )
-            }
+            Icon(
+                imageVector = Icons.Default.CheckCircle,
+                contentDescription = "Reserva confirmada",
+                tint = Color.White,
+                modifier = Modifier.size(110.dp)
+            )
         }
     }
 }
