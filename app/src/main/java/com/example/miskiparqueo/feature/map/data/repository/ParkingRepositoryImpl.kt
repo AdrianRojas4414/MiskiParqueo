@@ -30,4 +30,15 @@ class ParkingRepositoryImpl(
             Result.failure(e)
         }
     }
+
+    override suspend fun getParkingById(parkingId: String): Result<ParkingLocationModel> {
+        return try {
+            getParkingLocations().mapCatching { locations ->
+                locations.firstOrNull { it.id == parkingId }
+                    ?: throw NoSuchElementException("No se encontr\u00f3 el parqueo solicitado")
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }

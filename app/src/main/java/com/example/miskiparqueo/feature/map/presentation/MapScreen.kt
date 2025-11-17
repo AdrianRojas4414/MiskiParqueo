@@ -44,8 +44,9 @@ import org.koin.androidx.compose.koinViewModel
 fun MapScreen(
     modifier: Modifier = Modifier,
     vm: MapViewModel = koinViewModel(),
-    onNavigateToProfile: () -> Unit//,
-    //onNavigateToReservation: (String) -> Unit
+    onNavigateToProfile: () -> Unit,
+    onNavigateToReservations: () -> Unit,
+    onNavigateToReservation: (String) -> Unit
 ) {
     // 1. PERMISOS DE UBICACIÓN
     var hasLocationPermission by remember { mutableStateOf(false) }
@@ -73,6 +74,7 @@ fun MapScreen(
     var destinationQuery by remember { mutableStateOf("") }
     var isSelectingOrigin by remember { mutableStateOf(false) }
     var shouldSearch by remember { mutableStateOf(true) }
+    var showProfileMenu by remember { mutableStateOf(false) }
 
     // Cliente de ubicación
     val context = androidx.compose.ui.platform.LocalContext.current
@@ -156,8 +158,10 @@ fun MapScreen(
                             vm.cancelParkingSelection()
                             destinationQuery = ""
                             shouldSearch = true
-                        }//,
-                        //onReserve = { onNavigateToReservation(currentState.routeInfo.destination.id) }
+                        },
+                        onReserve = {
+                            onNavigateToReservation(currentState.routeInfo.destination.id)
+                        }
                     )
                 }
                 else -> {
@@ -366,20 +370,41 @@ fun MapScreen(
                     }
                 }
 
-                // BOTÓN DE PERFIL
-                IconButton(
-                    onClick = onNavigateToProfile,
+                Box(
                     modifier = Modifier
                         .align(Alignment.TopEnd)
                         .padding(top = 16.dp, end = 16.dp)
-                        .size(48.dp)
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.AccountCircle,
-                        contentDescription = "Perfil",
-                        modifier = Modifier.fillMaxSize(),
-                        tint = Color.DarkGray
-                    )
+                    IconButton(
+                        onClick = { showProfileMenu = true },
+                        modifier = Modifier.size(48.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.AccountCircle,
+                            contentDescription = "Perfil",
+                            modifier = Modifier.fillMaxSize(),
+                            tint = Color.DarkGray
+                        )
+                    }
+                    DropdownMenu(
+                        expanded = showProfileMenu,
+                        onDismissRequest = { showProfileMenu = false }
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text("Perfil") },
+                            onClick = {
+                                showProfileMenu = false
+                                onNavigateToProfile()
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Reservas") },
+                            onClick = {
+                                showProfileMenu = false
+                                onNavigateToReservations()
+                            }
+                        )
+                    }
                 }
 
                 // BOTÓN "CENTRAR UBICACIÓN GPS"
@@ -567,7 +592,7 @@ fun SearchSuggestions(
 fun ParkingDetailsBottomSheet(
     routeInfo: com.example.miskiparqueo.feature.map.domain.model.RouteInfoModel,
     onCancel: () -> Unit,
-    //onReserve: () -> Unit
+    onReserve: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -634,7 +659,7 @@ fun ParkingDetailsBottomSheet(
                 Text("Cancelar")
             }
             Button(
-                onClick = onCancel,
+                onClick = onReserve,
                 modifier = Modifier.weight(1f),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xFFFFEB3B)
