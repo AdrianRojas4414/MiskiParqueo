@@ -58,6 +58,9 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.navigationBars
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -424,11 +427,17 @@ private fun ReservationBottomBar(
 ) {
     if (state.detail == null || state.isLoading) return
 
+    // Obtener el padding de la barra de navegación del sistema
+    val navigationBarPadding = WindowInsets.navigationBars.asPaddingValues()
+
     Surface(shadowElevation = 12.dp) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
+                .padding(top = 16.dp)
+                // CLAVE: Añadir padding bottom para la barra de navegación
+                .padding(bottom = navigationBarPadding.calculateBottomPadding())
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -457,6 +466,8 @@ private fun ReservationBottomBar(
             ) {
                 Text("Reservar")
             }
+            // Espacio adicional de seguridad
+            Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }
