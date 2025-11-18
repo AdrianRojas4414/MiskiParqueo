@@ -37,6 +37,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.navigationBars
 
 @OptIn(FlowPreview::class, ExperimentalMaterial3Api::class)
 @SuppressLint("MissingPermission")
@@ -594,10 +597,16 @@ fun ParkingDetailsBottomSheet(
     onCancel: () -> Unit,
     onReserve: () -> Unit
 ) {
+    // Obtener el padding de la barra de navegación del sistema
+    val navigationBarPadding = WindowInsets.navigationBars.asPaddingValues()
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(24.dp),
+            .padding(24.dp)
+            .padding(top = 24.dp)
+            // CLAVE: Añadir padding bottom para la barra de navegación
+            .padding(bottom = navigationBarPadding.calculateBottomPadding()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
@@ -668,6 +677,8 @@ fun ParkingDetailsBottomSheet(
                 Text("Reservar", color = Color.Black, fontWeight = FontWeight.Bold)
             }
         }
+        // Espacio adicional de seguridad
+        Spacer(modifier = Modifier.height(8.dp))
     }
 }
 
