@@ -2,7 +2,7 @@ package com.example.miskiparqueo.feature.reservation.data.repository
 
 import com.example.miskiparqueo.feature.map.domain.repository.IParkingRepository
 import com.example.miskiparqueo.feature.reservation.data.datasource.ParkingExtrasDataSource
-import com.example.miskiparqueo.feature.reservation.data.datasource.ReservationLocalDataSource
+import com.example.miskiparqueo.feature.reservation.data.datasource.ReservationFirebaseDataSource
 import com.example.miskiparqueo.feature.reservation.data.datasource.dto.ReservationRecordDto
 import com.example.miskiparqueo.feature.reservation.domain.model.ParkingReservationDetailModel
 import com.example.miskiparqueo.feature.reservation.domain.model.ReservationRecordModel
@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.map
 class ReservationRepositoryImpl(
     private val parkingRepository: IParkingRepository,
     private val parkingExtrasDataSource: ParkingExtrasDataSource,
-    private val reservationLocalDataSource: ReservationLocalDataSource
+    private val reservationFirebaseDataSource: ReservationFirebaseDataSource // CAMBIADO
 ) : IReservationRepository {
 
     override suspend fun getReservationDetail(parkingId: String): Result<ParkingReservationDetailModel> {
@@ -59,7 +59,7 @@ class ReservationRepositoryImpl(
                 status = ReservationStatus.ACTIVE.name,
                 createdAt = System.currentTimeMillis()
             )
-            reservationLocalDataSource.saveReservation(dto)
+            reservationFirebaseDataSource.saveReservation(dto)
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
@@ -67,7 +67,7 @@ class ReservationRepositoryImpl(
     }
 
     override fun observeActiveReservations(userId: String): Flow<List<ReservationRecordModel>> {
-        return reservationLocalDataSource.observeReservations().map { records ->
+        return reservationFirebaseDataSource.observeReservations().map { records ->
             records.filter { it.userId == userId && it.status == ReservationStatus.ACTIVE.name }
                 .map { dto ->
                     ReservationRecordModel(

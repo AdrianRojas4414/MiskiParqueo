@@ -1,7 +1,7 @@
 package com.example.miskiparqueo.di
 
 import com.example.miskiparqueo.feature.reservation.data.datasource.ParkingExtrasDataSource
-import com.example.miskiparqueo.feature.reservation.data.datasource.ReservationLocalDataSource
+import com.example.miskiparqueo.feature.reservation.data.datasource.ReservationFirebaseDataSource
 import com.example.miskiparqueo.feature.reservation.data.repository.ReservationRepositoryImpl
 import com.example.miskiparqueo.feature.reservation.domain.repository.IReservationRepository
 import com.example.miskiparqueo.feature.reservation.domain.usecases.ConfirmReservationUseCase
@@ -15,13 +15,21 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val reservationModule = module {
+    // DataSources
     single { ParkingExtrasDataSource() }
-    single { ReservationLocalDataSource() }
-    single<IReservationRepository> { ReservationRepositoryImpl(get(), get(), get()) }
+    single { ReservationFirebaseDataSource() } // CAMBIADO: de Local a Firebase
+
+    // Repository
+    single<IReservationRepository> {
+        ReservationRepositoryImpl(get(), get(), get())
+    }
+
+    // UseCases
     single { GetReservationDetailUseCase(get()) }
     single { ConfirmReservationUseCase(get()) }
     single { ObserveActiveReservationsUseCase(get()) }
 
+    // ViewModels
     viewModel { (parkingId: String) ->
         ReservationViewModel(
             parkingId = parkingId,
