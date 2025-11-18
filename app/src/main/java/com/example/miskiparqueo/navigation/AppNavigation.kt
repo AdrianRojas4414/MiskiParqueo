@@ -110,6 +110,13 @@ fun AppNavigation(){
                     },
                     onNavigateBack = {
                         navController.popBackStack()
+                    },
+                    // NUEVO: Callback para cerrar sesión
+                    onLogout = {
+                        // Limpiar toda la pila de navegación y volver al login
+                        navController.navigate(Screen.LoginScreen.route) {
+                            popUpTo(0) { inclusive = true }  // Elimina toda la pila
+                        }
                     }
                 )
             }

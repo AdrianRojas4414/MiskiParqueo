@@ -19,16 +19,21 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ExitToApp
 
 @Composable
 fun ProfileScreen(
     modifier: Modifier = Modifier,
     vm: ProfileViewModel = koinViewModel(),
     onNavigateToChangePassword: () -> Unit,
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
+    onLogout: () -> Unit
 ) {
     val user by vm.userState.collectAsState()
     val uiState by vm.uiState.collectAsState()
+
+    // Estado para el diálogo de confirmación
+    var showLogoutDialog by remember { mutableStateOf(false) }
 
     Column(
         modifier = modifier
@@ -51,8 +56,10 @@ fun ProfileScreen(
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary
             )
-            Spacer(modifier = Modifier.width(48.dp)) // Balance visual
+            Spacer(modifier = Modifier.width(48.dp))
         }
+
+        Spacer(modifier = Modifier.height(24.dp))
 
         // Campo First Name
         OutlinedTextField(
@@ -126,6 +133,27 @@ fun ProfileScreen(
             Text("Cambiar Contraseña", fontSize = 16.sp, fontWeight = FontWeight.Bold)
         }
 
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // NUEVO: Botón Cerrar Sesión
+        OutlinedButton(
+            onClick = { showLogoutDialog = true },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp),
+            colors = ButtonDefaults.outlinedButtonColors(
+                contentColor = MaterialTheme.colorScheme.error
+            )
+        ) {
+            Icon(
+                imageVector = Icons.Default.ExitToApp,
+                contentDescription = "Cerrar sesión",
+                modifier = Modifier.size(20.dp)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text("Cerrar Sesión", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+        }
+
         Spacer(modifier = Modifier.height(24.dp))
 
         // Estados de UI (Loading, Error o Success)
@@ -143,11 +171,35 @@ fun ProfileScreen(
             is ProfileViewModel.ProfileUIState.Success -> {
                 Text(
                     text = state.message,
-                    color = Color(0xFF00C853), // Un color verde para el éxito
+                    color = Color(0xFF00C853),
                     textAlign = TextAlign.Center
                 )
             }
             else -> {}
         }
+    }
+
+    // NUEVO: Diálogo de confirmación de cierre de sesión
+    if (showLogoutDialog) {
+        AlertDialog(
+            onDismissRequest = { showLogoutDialog = false },
+            title = { Text("Cerrar Sesión") },
+            text = { Text("¿Estás seguro de que deseas cerrar sesión?") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showLogoutDialog = false
+                        onLogout()
+                    }
+                ) {
+                    Text("Sí, cerrar sesión", color = MaterialTheme.colorScheme.error)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showLogoutDialog = false }) {
+                    Text("Cancelar")
+                }
+            }
+        )
     }
 }
