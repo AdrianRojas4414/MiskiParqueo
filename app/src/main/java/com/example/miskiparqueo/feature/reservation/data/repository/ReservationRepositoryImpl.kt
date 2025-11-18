@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.map
 class ReservationRepositoryImpl(
     private val parkingRepository: IParkingRepository,
     private val parkingExtrasDataSource: ParkingExtrasDataSource,
-    private val reservationFirebaseDataSource: ReservationFirebaseDataSource // CAMBIADO
+    private val reservationFirebaseDataSource: ReservationFirebaseDataSource
 ) : IReservationRepository {
 
     override suspend fun getReservationDetail(parkingId: String): Result<ParkingReservationDetailModel> {
@@ -47,7 +47,7 @@ class ReservationRepositoryImpl(
     override suspend fun confirmReservation(request: ReservationRequestModel): Result<Unit> {
         return try {
             val dto = ReservationRecordDto(
-                id = "",
+                id = "", // Se generará en el DataSource
                 userId = request.userId,
                 parkingId = request.parking.id,
                 parkingName = request.parking.name,
@@ -59,16 +59,31 @@ class ReservationRepositoryImpl(
                 status = ReservationStatus.ACTIVE.name,
                 createdAt = System.currentTimeMillis()
             )
-            reservationFirebaseDataSource.saveReservation(dto)
-            Result.success(Unit)
+
+            // Guardar en Firebase
+            val result = reservationFirebaseDataSource.saveReservation(dto)
+
+            result.fold(
+                onSuccess = {
+                    println("✅ Reserva confirmada y guardada en Firebase")
+                    Result.success(Unit)
+                },
+                onFailure = { error ->
+                    println("❌ Error al guardar reserva: ${error.message}")
+                    Result.failure(error)
+                }
+            )
         } catch (e: Exception) {
+            println("❌ Excepción al confirmar reserva: ${e.message}")
             Result.failure(e)
         }
     }
 
     override fun observeActiveReservations(userId: String): Flow<List<ReservationRecordModel>> {
-        return reservationFirebaseDataSource.observeReservations().map { records ->
-            records.filter { it.userId == userId && it.status == ReservationStatus.ACTIVE.name }
+        // Ahora observa solo las reservas del usuario específico
+        return reservationFirebaseDataSource.observeUserReservations(userId).map { records ->
+            records
+                .filter { it.status == ReservationStatus.ACTIVE.name }
                 .map { dto ->
                     ReservationRecordModel(
                         id = dto.id,
