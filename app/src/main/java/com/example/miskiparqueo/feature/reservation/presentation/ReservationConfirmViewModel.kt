@@ -60,10 +60,18 @@ class ReservationConfirmViewModel(
             val result = getReservationDetailUseCase(parkingId)
             result.fold(
                 onSuccess = { detail ->
-                    _uiState.value = _uiState.value.copy(
-                        isLoading = false,
-                        detail = detail
-                    )
+                    // NUEVO: Verificar cupos antes de mostrar la pantalla de confirmación
+                    if (detail.parking.availableSpots <= 0) {
+                        _uiState.value = _uiState.value.copy(
+                            isLoading = false,
+                            errorMessage = "❌ Lo sentimos, este parqueo ya no tiene cupos disponibles. Por favor selecciona otro parqueo."
+                        )
+                    } else {
+                        _uiState.value = _uiState.value.copy(
+                            isLoading = false,
+                            detail = detail
+                        )
+                    }
                 },
                 onFailure = { error ->
                     _uiState.value = _uiState.value.copy(
@@ -77,6 +85,14 @@ class ReservationConfirmViewModel(
 
     fun confirmReservation() {
         val detail = _uiState.value.detail ?: return
+
+        // Verificar nuevamente antes de confirmar
+        if (detail.parking.availableSpots <= 0) {
+            _uiState.value = _uiState.value.copy(
+                errorMessage = "❌ Este parqueo ya no tiene cupos disponibles"
+            )
+            return
+        }
 
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isConfirming = true, errorMessage = null)

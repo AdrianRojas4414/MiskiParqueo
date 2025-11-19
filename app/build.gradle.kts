@@ -98,6 +98,8 @@ dependencies {
     //local bundle room
     implementation(libs.bundles.local)
     implementation(libs.play.services.maps)
+    implementation(libs.firebase.remoteconfig)
+    implementation(libs.datastore)
     annotationProcessor(libs.room.compiler)
     ksp(libs.room.compiler)
     testImplementation(libs.room.testing)

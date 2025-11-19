@@ -27,7 +27,8 @@ class ReservationViewModel(
         val entryTime: LocalTime = LocalTime.now(),
         val exitTime: LocalTime = LocalTime.now().plusHours(2),
         val totalCost: Double = 0.0,
-        val validationError: String? = null
+        val validationError: String? = null,
+        val hasAvailableSpots: Boolean = true  // NUEVO: indicador de cupos disponibles
     )
 
     private val _uiState = MutableStateFlow(ReservationUiState())
@@ -76,6 +77,15 @@ class ReservationViewModel(
             result.fold(
                 onSuccess = { detail ->
                     val (totalCost, validationError) = calculateCost(detail, defaultEntry, defaultExit)
+
+                    // NUEVO: Verificar si hay cupos disponibles
+                    val hasSpots = detail.parking.availableSpots > 0
+                    val finalValidationError = if (!hasSpots) {
+                        "❌ No hay cupos disponibles en este parqueo (0/${detail.parking.totalSpots})"
+                    } else {
+                        validationError
+                    }
+
                     _uiState.value = ReservationUiState(
                         isLoading = false,
                         detail = detail,
@@ -83,13 +93,14 @@ class ReservationViewModel(
                         entryTime = defaultEntry,
                         exitTime = defaultExit,
                         totalCost = totalCost,
-                        validationError = validationError
+                        validationError = finalValidationError,
+                        hasAvailableSpots = hasSpots  // NUEVO
                     )
                 },
                 onFailure = { error ->
                     _uiState.value = ReservationUiState(
                         isLoading = false,
-                        errorMessage = error.message ?: "No se pudo cargar la informaci\u00f3n"
+                        errorMessage = error.message ?: "No se pudo cargar la información"
                     )
                 }
             )

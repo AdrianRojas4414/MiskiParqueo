@@ -9,16 +9,21 @@ import com.example.miskiparqueo.feature.reservation.domain.model.ReservationReco
 import com.example.miskiparqueo.feature.reservation.domain.model.ReservationRequestModel
 import com.example.miskiparqueo.feature.reservation.domain.model.ReservationStatus
 import com.example.miskiparqueo.feature.reservation.domain.repository.IReservationRepository
+import com.google.firebase.database.FirebaseDatabase
 import java.time.LocalDate
 import java.time.LocalTime
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.tasks.await
 
 class ReservationRepositoryImpl(
     private val parkingRepository: IParkingRepository,
     private val parkingExtrasDataSource: ParkingExtrasDataSource,
     private val reservationFirebaseDataSource: ReservationFirebaseDataSource
 ) : IReservationRepository {
+
+    private val database = FirebaseDatabase.getInstance()
+    private val parkingsRef = database.getReference("parkings")
 
     override suspend fun getReservationDetail(parkingId: String): Result<ParkingReservationDetailModel> {
         val parkingResult = parkingRepository.getParkingById(parkingId)
@@ -46,8 +51,17 @@ class ReservationRepositoryImpl(
 
     override suspend fun confirmReservation(request: ReservationRequestModel): Result<Unit> {
         return try {
+            // 1. Verificar cupos disponibles
+            val parkingSnapshot = parkingsRef.child(request.parking.id).get().await()
+            val currentAvailableSpots = parkingSnapshot.child("availableSpots").getValue(Int::class.java) ?: 0
+
+            if (currentAvailableSpots <= 0) {
+                return Result.failure(Exception("No hay cupos disponibles en este parqueo"))
+            }
+
+            // 2. Crear el DTO de la reserva
             val dto = ReservationRecordDto(
-                id = "", // Se generará en el DataSource
+                id = "",
                 userId = request.userId,
                 parkingId = request.parking.id,
                 parkingName = request.parking.name,
@@ -60,12 +74,19 @@ class ReservationRepositoryImpl(
                 createdAt = System.currentTimeMillis()
             )
 
-            // Guardar en Firebase
-            val result = reservationFirebaseDataSource.saveReservation(dto)
+            // 3. Guardar la reserva en Firebase
+            val reservationResult = reservationFirebaseDataSource.saveReservation(dto)
 
-            result.fold(
+            reservationResult.fold(
                 onSuccess = {
-                    println("✅ Reserva confirmada y guardada en Firebase")
+                    // 4. Actualizar los cupos disponibles (restar 1)
+                    val newAvailableSpots = currentAvailableSpots - 1
+                    parkingsRef.child(request.parking.id)
+                        .child("availableSpots")
+                        .setValue(newAvailableSpots)
+                        .await()
+
+                    println("✅ Reserva confirmada y cupos actualizados: $newAvailableSpots/${request.parking.totalSpots}")
                     Result.success(Unit)
                 },
                 onFailure = { error ->
@@ -80,7 +101,6 @@ class ReservationRepositoryImpl(
     }
 
     override fun observeActiveReservations(userId: String): Flow<List<ReservationRecordModel>> {
-        // Ahora observa solo las reservas del usuario específico
         return reservationFirebaseDataSource.observeUserReservations(userId).map { records ->
             records
                 .filter { it.status == ReservationStatus.ACTIVE.name }

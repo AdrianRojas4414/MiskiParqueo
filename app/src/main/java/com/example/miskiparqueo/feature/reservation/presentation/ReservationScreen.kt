@@ -61,6 +61,8 @@ import org.koin.core.parameter.parametersOf
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.ButtonDefaults
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -427,8 +429,9 @@ private fun ReservationBottomBar(
 ) {
     if (state.detail == null || state.isLoading) return
 
-    // Obtener el padding de la barra de navegación del sistema
     val navigationBarPadding = WindowInsets.navigationBars.asPaddingValues()
+    val hasSpots = state.hasAvailableSpots
+    val hasTimeError = state.validationError?.contains("hora de salida", ignoreCase = true) == true
 
     Surface(shadowElevation = 12.dp) {
         Column(
@@ -436,9 +439,48 @@ private fun ReservationBottomBar(
                 .fillMaxWidth()
                 .padding(16.dp)
                 .padding(top = 16.dp)
-                // CLAVE: Añadir padding bottom para la barra de navegación
                 .padding(bottom = navigationBarPadding.calculateBottomPadding())
         ) {
+            // Mostrar advertencia si no hay cupos
+            if (!hasSpots) {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 12.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = Color(0xFFFFEBEE)
+                    )
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(12.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Warning,
+                            contentDescription = "Sin cupos",
+                            tint = Color(0xFFD32F2F),
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Column {
+                            Text(
+                                text = "Sin cupos disponibles",
+                                style = MaterialTheme.typography.titleSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = Color(0xFFD32F2F)
+                            )
+                            Text(
+                                text = "Este parqueo ha alcanzado su capacidad máxima (0/${state.detail.parking.totalSpots})",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = Color(0xFF5F0000)
+                            )
+                        }
+                    }
+                }
+            }
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -449,24 +491,48 @@ private fun ReservationBottomBar(
                     Text(
                         text = "Bs ${String.format(Locale.getDefault(), "%.2f", state.totalCost)}",
                         style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        color = if (hasSpots) MaterialTheme.colorScheme.primary else Color.Gray
                     )
                 }
-                Text(
-                    text = "Tarifa x hora: Bs ${String.format(Locale.getDefault(), "%.2f", state.detail.parking.pricePerHour)}",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color.Gray
-                )
+                Column(horizontalAlignment = Alignment.End) {
+                    Text(
+                        text = "Tarifa x hora: Bs ${String.format(Locale.getDefault(), "%.2f", state.detail.parking.pricePerHour)}",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.Gray
+                    )
+                    // NUEVO: Mostrar cupos disponibles con color
+                    val spotsColor = when {
+                        state.detail.parking.availableSpots == 0 -> Color(0xFFD32F2F)
+                        state.detail.parking.availableSpots <= 5 -> Color(0xFFFF9800)
+                        else -> Color(0xFF4CAF50)
+                    }
+                    Text(
+                        text = "Cupos: ${state.detail.parking.availableSpots}/${state.detail.parking.totalSpots}",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = spotsColor,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
             }
+
             Spacer(modifier = Modifier.height(12.dp))
+
             Button(
                 onClick = onReserve,
-                enabled = state.validationError == null,
-                modifier = Modifier.fillMaxWidth()
+                enabled = hasSpots && !hasTimeError,  // NUEVO: deshabilitar si no hay cupos o hay error de horario
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (hasSpots) MaterialTheme.colorScheme.primary else Color.Gray,
+                    disabledContainerColor = Color(0xFFE0E0E0)
+                )
             ) {
-                Text("Reservar")
+                Text(
+                    text = if (!hasSpots) "Sin cupos disponibles" else "Reservar",
+                    fontWeight = FontWeight.Bold
+                )
             }
-            // Espacio adicional de seguridad
+
             Spacer(modifier = Modifier.height(8.dp))
         }
     }
