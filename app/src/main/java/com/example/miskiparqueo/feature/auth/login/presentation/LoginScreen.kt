@@ -35,7 +35,7 @@ fun LoginScreen(
     var credential by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
-    var rememberMe by remember { mutableStateOf(false) }
+    //var rememberMe by remember { mutableStateOf(false) }
 
     val state by vm.state.collectAsState()
 
@@ -119,7 +119,7 @@ fun LoginScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         // Checkbox "Recuérdame"
-        Row(
+        /*Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -132,7 +132,7 @@ fun LoginScreen(
                 fontSize = 14.sp,
                 modifier = Modifier.padding(start = 8.dp)
             )
-        }
+        }*/
 
         Spacer(modifier = Modifier.height(24.dp))
 

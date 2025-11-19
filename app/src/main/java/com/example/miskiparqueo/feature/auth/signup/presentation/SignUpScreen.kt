@@ -38,7 +38,7 @@ fun SignUpScreen(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
-    var termsAccepted by remember { mutableStateOf(false) }
+    //var termsAccepted by remember { mutableStateOf(false) }
 
     val state by vm.state.collectAsState()
 
@@ -176,7 +176,7 @@ fun SignUpScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         // Checkbox Términos
-        Row(
+        /*Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -189,21 +189,22 @@ fun SignUpScreen(
                 fontSize = 14.sp,
                 modifier = Modifier.padding(start = 8.dp)
             )
-        }
+        }*/
 
         Spacer(modifier = Modifier.height(24.dp))
 
         // Botón Registrarse
         Button(
             onClick = {
-                if (termsAccepted) {
+                //if (termsAccepted) {
                     vm.signUp(firstName, lastName, username, email, password)
-                }
+                //}
             },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
-            enabled = termsAccepted && state !is SignUpViewModel.SignUpStateUI.Loading
+            //enabled = termsAccepted && state !is SignUpViewModel.SignUpStateUI.Loading
+            enabled = state !is SignUpViewModel.SignUpStateUI.Loading
         ) {
             Text("Registrarse", fontSize = 16.sp, fontWeight = FontWeight.Bold)
         }
