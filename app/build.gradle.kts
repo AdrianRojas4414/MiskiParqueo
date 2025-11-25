@@ -19,11 +19,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.miskiparqueo"
+    namespace = "com.miskidev.miskiparqueo"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.miskiparqueo"
+        applicationId = "com.miskidev.miskiparqueo"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
