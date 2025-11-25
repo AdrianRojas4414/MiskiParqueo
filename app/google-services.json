@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "580315170847",
+    "firebase_url": "https://miskiparqueop-default-rtdb.firebaseio.com",
     "project_id": "miskiparqueop",
     "storage_bucket": "miskiparqueop.firebasestorage.app"
   },
@@ -10,6 +11,25 @@
         "mobilesdk_app_id": "1:580315170847:android:871984ce3623134f46ad2a",
         "android_client_info": {
           "package_name": "com.example.miskiparqueo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRKsOg815_gRZeP3Y2XVL5V8c8KIQ-XA8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:580315170847:android:0e1a2a79daec371c46ad2a",
+        "android_client_info": {
+          "package_name": "com.miskidev.miskiparqueo"
         }
       },
       "oauth_client": [],
