@@ -2,60 +2,320 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Resumen de Pruebas</title>
+  <title>Resumen de pruebas</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 24px; }
-    table { width: 100%; border-collapse: collapse; }
-    th, td { padding: 8px 10px; border: 1px solid #ddd; text-align: left; }
-    th { background: #f3f3f3; }
-    caption { margin-bottom: 12px; font-weight: bold; font-size: 18px; }
+    :root {
+      --bg: #0f172a;
+      --panel: #111827;
+      --accent: #22d3ee;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --border: #1f2937;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 24px;
+      font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      background: radial-gradient(120% 120% at 15% 20%, rgba(34, 211, 238, 0.08), transparent),
+                  radial-gradient(140% 140% at 80% 10%, rgba(59, 130, 246, 0.08), transparent),
+                  var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+      letter-spacing: -0.5px;
+    }
+    p.lead { margin: 0 0 20px; color: var(--muted); }
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      margin-right: 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      letter-spacing: 0.3px;
+      color: #0f172a;
+      background: var(--accent);
+      font-weight: 700;
+    }
+    section { margin-top: 24px; }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px 18px;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
+      margin-bottom: 20px;
+    }
+    .card h2 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      letter-spacing: -0.2px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 6px;
+    }
+    th, td {
+      padding: 10px 12px;
+      vertical-align: top;
+      border-top: 1px solid var(--border);
+      color: var(--text);
+    }
+    th { text-align: left; color: var(--muted); font-weight: 600; }
+    tr.group th {
+      border-top: none;
+      padding-top: 18px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--accent);
+    }
+    ul { margin: 6px 0 0; padding-left: 18px; color: var(--muted); }
+    code { background: #0b1224; padding: 2px 6px; border-radius: 6px; }
   </style>
 </head>
 <body>
-  <table>
-    <caption>Pruebas del Proyecto</caption>
-    <tr>
-      <th>Archivo</th>
-      <th>Nombre de prueba</th>
-      <th>Descripción</th>
-    </tr>
-    <tr><td colspan="3"><strong>Unitario · Value Objects</strong></td></tr>
-    <tr><td>app/src/test/java/com/miskidev/miskiparqueo/feature/auth/signup/domain/model/vo/SignUpValueObjectsTest.kt</td><td>email trims and lowercases input</td><td>Normaliza email quitando espacios y forzando minúsculas.</td></tr>
-    <tr><td></td><td>invalid email format throws</td><td>Rechaza formatos de email inválidos.</td></tr>
-    <tr><td></td><td>password enforces minimum rules</td><td>Exige longitud &gt;=8 y mezcla de dígitos y letras.</td></tr>
-    <tr><td></td><td>username allows expected characters and length</td><td>Acepta usernames válidos (3-36, alfanumérico + guion bajo).</td></tr>
-    <tr><td></td><td>username rejects invalid characters</td><td>Rechaza usernames con caracteres no permitidos.</td></tr>
-    <tr><td></td><td>first and last name cannot be blank</td><td>Impide nombres/apellidos vacíos.</td></tr>
-    <tr><td></td><td>first and last name enforce length limits</td><td>Rechaza nombres/apellidos de más de 50 caracteres.</td></tr>
-    <tr><td colspan="3"><strong>Unitario · Casos de uso</strong></td></tr>
-    <tr><td>app/src/test/java/com/miskidev/miskiparqueo/feature/auth/login/domain/usecases/LoginUseCaseTest.kt</td><td>blank credential fails fast</td><td>Credencial vacía devuelve fallo y no llama al repositorio.</td></tr>
-    <tr><td></td><td>successful login delegates to repository</td><td>Devuelve éxito cuando el repo autentica correctamente.</td></tr>
-    <tr><td></td><td>repository failure is propagated</td><td>Propaga el error entregado por el repositorio.</td></tr>
-    <tr><td></td><td>credential with spaces is considered blank</td><td>Trata credenciales solo con espacios como vacías.</td></tr>
-    <tr><td>app/src/test/java/com/miskidev/miskiparqueo/feature/map/domain/usecases/SearchParkingsUseCaseTest.kt</td><td>blank query returns all parkings</td><td>Consulta vacía retorna todos los parqueos.</td></tr>
-    <tr><td></td><td>query filters by name or address</td><td>Filtra parqueos por nombre o dirección ignorando mayúsculas.</td></tr>
-    <tr><td>app/src/test/java/com/miskidev/miskiparqueo/feature/map/domain/usecases/CalculateRouteUseCaseTest.kt</td><td>calculates non zero distance</td><td>Calcula una distancia válida y conserva el destino.</td></tr>
-    <tr><td></td><td>estimates time around 30kmh</td><td>Tiempo estimado ~60 min para ~30 km (30 km/h).</td></tr>
-    <tr><td colspan="3"><strong>Unitario · ViewModels</strong></td></tr>
-    <tr><td>app/src/test/java/com/miskidev/miskiparqueo/feature/auth/login/presentation/LoginViewModelTest.kt</td><td>invalid password produces validation state</td><td>Password corta dispara ValidationError.</td></tr>
-    <tr><td></td><td>successful login updates state</td><td>Estado pasa a Success con el usuario retornado.</td></tr>
-    <tr><td></td><td>repository error is exposed</td><td>Errores del repositorio se exponen como Error.</td></tr>
-    <tr><td>app/src/test/java/com/miskidev/miskiparqueo/feature/auth/signup/presentation/SignUpViewModelTest.kt</td><td>invalid email produces validation error</td><td>Email inválido genera ValidationError específico.</td></tr>
-    <tr><td></td><td>successful signup updates state</td><td>Signup exitoso produce estado Success con usuario.</td></tr>
-    <tr><td></td><td>weak password triggers validation error</td><td>Password débil produce ValidationError.</td></tr>
-    <tr><td>app/src/test/java/com/miskidev/miskiparqueo/feature/map/presentation/MapViewModelTest.kt</td><td>view model loads parking locations on init</td><td>Carga parqueos al inicializar y pasa a ShowingMap.</td></tr>
-    <tr><td></td><td>confirming origin and selecting parking returns route info</td><td>Con origen confirmado, seleccionar parqueo produce ruta.</td></tr>
-    <tr><td></td><td>search updates state with filtered results</td><td>Busqueda cambia a Searching con resultados filtrados.</td></tr>
-    <tr><td></td><td>selecting parking without origin yields error</td><td>Seleccionar sin origen produce estado Error.</td></tr>
-    <tr><td colspan="3"><strong>UI · Robolectric + Compose</strong></td></tr>
-    <tr><td>app/src/test/java/com/miskidev/miskiparqueo/feature/auth/ui/AuthScreensUiTest.kt</td><td>loginScreenShowsValidationErrorForShortPassword</td><td>Mostrar mensaje de “8 caracteres” al ingresar password corta.</td></tr>
-    <tr><td></td><td>loginScreenCallsNavigationOnSuccess</td><td>En éxito llama a navegación con el userId retornado.</td></tr>
-    <tr><td></td><td>signUpScreenShowsEmailValidationError</td><td>Email inválido muestra mensaje de error de email.</td></tr>
-    <tr><td></td><td>signUpScreenShowsAllInputs</td><td>Renderiza los 5 campos de texto y botón de registro.</td></tr>
-    <tr><td></td><td>loginScreenShowsInputsAndButton</td><td>Renderiza inputs de credencial y password y botón de ingreso.</td></tr>
-    <tr><td colspan="3"><strong>Infra</strong></td></tr>
-    <tr><td>app/src/test/java/com/miskidev/miskiparqueo/MainDispatcherRule.kt</td><td>Regla de dispatcher</td><td>Configura Dispatchers.Main con dispatcher de prueba.</td></tr>
-    <tr><td>app/src/test/AndroidManifest.xml</td><td>Manifest de pruebas</td><td>Declara ComponentActivity para Robolectric.</td></tr>
-  </table>
+  <header>
+    <span class="badge">Unitarias</span>
+    <span class="badge">UI Robolectric + Compose</span>
+    <h1>Resumen de pruebas</h1>
+    <p class="lead">
+      Las pruebas cubren validaciones de dominio, casos de uso, view models y pantallas Compose en JVM.
+      No hay suites de integracion end-to-end; los repositorios usan dobles (mocks/fakes) en la mayoria de casos.
+    </p>
+  </header>
+
+  <section class="card">
+    <h2>Dominio y casos de uso</h2>
+    <table>
+      <tr>
+        <th>Archivo</th>
+        <th>Casos clave</th>
+      </tr>
+      <tr>
+        <td><code>feature/auth/signup/domain/model/vo/SignUpValueObjectsTest.kt</code></td>
+        <td>
+          <ul>
+            <li>Email se normaliza (trim/lower) y rechaza formatos invalidos.</li>
+            <li>Password exige largo minimo y mezcla de letras/digitos.</li>
+            <li>Username valida longitud y caracteres permitidos.</li>
+            <li>Nombre y apellido no pueden ser vacios ni excederse.</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td><code>feature/auth/login/domain/usecases/LoginUseCaseTest.kt</code></td>
+        <td>
+          <ul>
+            <li>Credencial vacia/solo espacios falla sin invocar repo.</li>
+            <li>Exito y errores se propagan desde el repositorio.</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td><code>feature/map/domain/usecases/SearchParkingsUseCaseTest.kt</code></td>
+        <td>
+          <ul>
+            <li>Consulta vacia retorna todos los parqueos.</li>
+            <li>Filtra por nombre o direccion sin importar mayusculas.</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td><code>feature/map/domain/usecases/CalculateRouteUseCaseTest.kt</code></td>
+        <td>
+          <ul>
+            <li>Calcula distancia &gt; 0 y conserva destino.</li>
+            <li>Estima tiempo cercano a 30 km/h.</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td><code>feature/reservation/domain/ReservationUseCasesTest.kt</code></td>
+        <td>
+          <ul>
+            <li>Confirmacion de reserva delega y retorna exito.</li>
+            <li>Detalle de reserva devuelve datos esperados.</li>
+            <li>Observa reservas activas del usuario.</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td><code>feature/profile/domain/ProfileUseCasesTest.kt</code></td>
+        <td>
+          <ul>
+            <li>Cambio de password delega en repo.</li>
+            <li>Actualizar usuario delega y devuelve exito.</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td><code>ExampleUnitTest.kt</code></td>
+        <td>Suma basica 2+2=4 (plantilla).</td>
+      </tr>
+    </table>
+  </section>
+
+  <section class="card">
+    <h2>Datos y repositorios</h2>
+    <table>
+      <tr><th>Archivo</th><th>Casos clave</th></tr>
+      <tr>
+        <td><code>feature/maintenance/data/MaintenanceDataStoreTest.kt</code></td>
+        <td>Guarda y lee la bandera de mantenimiento en DataStore.</td>
+      </tr>
+      <tr>
+        <td><code>feature/maintenance/data/MaintenanceRepositoryTest.kt</code></td>
+        <td>
+          <ul>
+            <li>fetchMaintenanceStatus guarda en DataStore tras RemoteConfig.</li>
+            <li>Observa estado desde DataStore.</li>
+            <li>Si falla RemoteConfig cae a valor guardado.</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td><code>feature/map/data/ParkingRepositoryImplTest.kt</code></td>
+        <td>
+          <ul>
+            <li>Mapea DTO a modelo de dominio.</li>
+            <li>Retorna failure si parking no existe.</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td><code>feature/profile/data/ProfileRepositoryImplTest.kt</code></td>
+        <td>
+          <ul>
+            <li>updateUser delega en datasource Firebase.</li>
+            <li>changePassword retorna failure ante excepcion.</li>
+          </ul>
+        </td>
+      </tr>
+    </table>
+  </section>
+
+  <section class="card">
+    <h2>ViewModels</h2>
+    <table>
+      <tr><th>Archivo</th><th>Casos clave</th></tr>
+      <tr>
+        <td><code>feature/auth/login/presentation/LoginViewModelTest.kt</code></td>
+        <td>
+          <ul>
+            <li>Password invalida produce ValidationError.</li>
+            <li>Exito actualiza estado con usuario.</li>
+            <li>Error de repo pasa a estado Error.</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td><code>feature/auth/signup/presentation/SignUpViewModelTest.kt</code></td>
+        <td>
+          <ul>
+            <li>Email invalido dispara ValidationError.</li>
+            <li>Password debil valida y detiene flujo.</li>
+            <li>Signup exitoso emite Success.</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td><code>feature/map/presentation/MapViewModelTest.kt</code></td>
+        <td>
+          <ul>
+            <li>Carga parqueos al iniciar y muestra mapa.</li>
+            <li>Con origen confirmado devuelve ruta al seleccionar parking.</li>
+            <li>Busqueda cambia a estado Searching con resultados.</li>
+            <li>Seleccionar sin origen produce Error.</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td><code>feature/maintenance/presentation/MaintenanceViewModelTest.kt</code></td>
+        <td>
+          <ul>
+            <li>Observa estado de mantenimiento desde repo.</li>
+            <li>Refresh invoca repo y actualiza estado.</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td><code>feature/reservation/presentation/ReservationViewModelTest.kt</code></td>
+        <td>
+          <ul>
+            <li>Carga detalle y lo coloca en estado.</li>
+            <li>Sin cupos muestra validacion y mensaje.</li>
+            <li>Hora de salida menor marca error y costo cero.</li>
+            <li>Errores de carga exponen mensaje.</li>
+            <li>Recalcula costo al cambiar hora de entrada.</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td><code>feature/profile/presentation/ChangePasswordViewModelTest.kt</code></td>
+        <td>
+          <ul>
+            <li>Passwords que no coinciden o cortas generan error inmediato.</li>
+            <li>Exito y fallo actualizan estado (Success/Error).</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td><code>feature/profile/presentation/ProfileViewModelTest.kt</code></td>
+        <td>
+          <ul>
+            <li>loadUserById carga y deja Idle.</li>
+            <li>Fallo de carga produce Error.</li>
+            <li>saveChanges emite Success o Error segun repo.</li>
+          </ul>
+        </td>
+      </tr>
+    </table>
+  </section>
+
+  <section class="card">
+    <h2>UI (Compose + Robolectric)</h2>
+    <table>
+      <tr><th>Archivo</th><th>Casos clave</th></tr>
+      <tr>
+        <td><code>feature/auth/ui/AuthScreensUiTest.kt</code></td>
+        <td>
+          <ul>
+            <li>Login muestra error por password corta y navega en exito.</li>
+            <li>SignUp muestra error de email invalido y renderiza inputs.</li>
+            <li>Login renderiza inputs y boton.</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td><code>feature/reservation/ui/ReservationScreenUiTest.kt</code></td>
+        <td>
+          <ul>
+            <li>Pantalla de reserva muestra detalle (nombre de parqueo).</li>
+            <li>Sin cupos sigue renderizando y expone estado en UI.</li>
+          </ul>
+        </td>
+      </tr>
+    </table>
+  </section>
+
+  <section class="card">
+    <h2>Infraestructura de pruebas</h2>
+    <table>
+      <tr><th>Archivo</th><th>Rol</th></tr>
+      <tr>
+        <td><code>MainDispatcherRule.kt</code></td>
+        <td>Configura Dispatchers.Main con dispatcher de prueba para coroutines.</td>
+      </tr>
+      <tr>
+        <td><code>app/src/test/AndroidManifest.xml</code></td>
+        <td>Declara ComponentActivity y configuracion de Robolectric.</td>
+      </tr>
+    </table>
+  </section>
 </body>
 </html>
