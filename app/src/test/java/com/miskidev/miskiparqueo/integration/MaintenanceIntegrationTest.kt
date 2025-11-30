@@ -67,4 +67,46 @@ class MaintenanceIntegrationTest {
         assertTrue(mode)
         assertTrue(stored)
     }
+
+    @Test
+    fun `estado inicial viene de datastore`() = runTest {
+        val dispatcher = StandardTestDispatcher(testScheduler)
+        val remoteConfig = mockk<FirebaseRemoteConfig>(relaxed = true)
+        every { remoteConfig.fetchAndActivate() } returns Tasks.forResult(true)
+        every { remoteConfig.getBoolean("maintenance_mode") } returns false
+
+        val repository = MaintenanceRepository(remoteConfig, dataStore, initRemote = false)
+        val viewModel = MaintenanceViewModel(repository, dispatcher = dispatcher, enablePeriodicFetch = false)
+
+        advanceUntilIdle()
+
+        val current = viewModel.maintenanceMode.first()
+        val stored = dataStore.getMaintenanceMode().first()
+        assertTrue(!current)
+        assertTrue(!stored)
+    }
+
+    @Test
+    fun `fallo de remote mantiene valor previo`() = runTest {
+        runBlocking {
+            context.maintenanceDataStore.edit { prefs ->
+                prefs[MaintenanceDataStore.MAINTENANCE_MODE] = true
+            }
+        }
+        val dispatcher = StandardTestDispatcher(testScheduler)
+        val remoteConfig = mockk<FirebaseRemoteConfig>(relaxed = true)
+        every { remoteConfig.fetchAndActivate() } returns Tasks.forException(IllegalStateException("boom"))
+        every { remoteConfig.getBoolean("maintenance_mode") } returns false
+
+        val repository = MaintenanceRepository(remoteConfig, dataStore, initRemote = false)
+        val viewModel = MaintenanceViewModel(repository, dispatcher = dispatcher, enablePeriodicFetch = false)
+
+        viewModel.refreshMaintenanceStatus()
+        advanceUntilIdle()
+
+        val mode = viewModel.maintenanceMode.first()
+        val stored = dataStore.getMaintenanceMode().first()
+        assertTrue(mode)
+        assertTrue(stored)
+    }
 }

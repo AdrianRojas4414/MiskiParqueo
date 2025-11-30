@@ -188,6 +188,104 @@ class AuthScreensUiTest {
         composeTestRule.onNodeWithText("Ingresa").assertIsDisplayed()
     }
 
+    @Test
+    fun loginScreenMuestraErrorCredencialVacia() {
+        val dispatcher = UnconfinedTestDispatcher()
+        val viewModel = LoginViewModel(
+            loginUseCase = LoginUseCase(FakeAuthRepository(Result.failure(Exception("unused")))),
+            dispatcher = dispatcher
+        )
+
+        composeTestRule.setContent {
+            LoginScreen(
+                vm = viewModel,
+                onNavigateToSignUp = {},
+                onNavigateToMap = {}
+            )
+        }
+
+        composeTestRule.onAllNodes(hasSetTextAction())[1].performTextInput("Password1")
+        composeTestRule.onNodeWithText("Ingresa").performClick()
+
+        composeTestRule.waitUntil { viewModel.state.value is LoginViewModel.LoginStateUI.Error }
+        dispatcher.scheduler.advanceUntilIdle()
+        composeTestRule.waitForIdle()
+
+        composeTestRule.onNodeWithText("Ingresa").assertIsDisplayed()
+        val state = viewModel.state.value
+        org.junit.Assert.assertTrue(state is LoginViewModel.LoginStateUI.Error)
+        org.junit.Assert.assertTrue((state as LoginViewModel.LoginStateUI.Error).message.contains("username", ignoreCase = true))
+    }
+
+    @Test
+    fun signUpScreenNavegaEnExito() {
+        val dispatcher = UnconfinedTestDispatcher()
+        val expected = UserSignUpModel(
+            userId = "321",
+            firstName = FirstName.create("Ana"),
+            lastName = LastName.create("Lopez"),
+            username = Username.create("analopez"),
+            email = Email.create("ana@example.com")
+        )
+        val viewModel = SignUpViewModel(
+            signUpUseCase = SignUpUseCase(FakeSignUpRepository(Result.success(expected))),
+            dispatcher = dispatcher
+        )
+        var navigated: String? = null
+
+        composeTestRule.setContent {
+            SignUpScreen(
+                vm = viewModel,
+                onNavigateToLogin = {},
+                onNavigateToMap = { userId -> navigated = userId }
+            )
+        }
+
+        composeTestRule.onNodeWithText("Primer Nombre").performTextInput("Ana")
+        composeTestRule.onNodeWithText("Apellido").performTextInput("Lopez")
+        composeTestRule.onNodeWithText("Username").performTextInput("analopez")
+        composeTestRule.onNodeWithText("Email").performTextInput("ana@example.com")
+        composeTestRule.onAllNodes(hasSetTextAction())[4].performTextInput("Password1")
+        composeTestRule.onNodeWithText("Registrarse").performClick()
+
+        dispatcher.scheduler.advanceUntilIdle()
+        composeTestRule.waitForIdle()
+
+        val finalState = viewModel.state.value
+        org.junit.Assert.assertTrue(finalState !is SignUpViewModel.SignUpStateUI.Error)
+        org.junit.Assert.assertTrue(finalState !is SignUpViewModel.SignUpStateUI.ValidationError)
+    }
+
+    @Test
+    fun signUpScreenMuestraErrorPasswordDebil() {
+        val dispatcher = UnconfinedTestDispatcher()
+        val viewModel = SignUpViewModel(
+            signUpUseCase = SignUpUseCase(FakeSignUpRepository(Result.failure(Exception("unused")))),
+            dispatcher = dispatcher
+        )
+
+        composeTestRule.setContent {
+            SignUpScreen(
+                vm = viewModel,
+                onNavigateToLogin = {},
+                onNavigateToMap = {}
+            )
+        }
+
+        composeTestRule.onNodeWithText("Primer Nombre").performTextInput("Ana")
+        composeTestRule.onNodeWithText("Apellido").performTextInput("Lopez")
+        composeTestRule.onNodeWithText("Username").performTextInput("analopez")
+        composeTestRule.onNodeWithText("Email").performTextInput("ana@example.com")
+        composeTestRule.onAllNodes(hasSetTextAction())[4].performTextInput("short")
+        composeTestRule.onNodeWithText("Registrarse").performClick()
+
+        dispatcher.scheduler.advanceUntilIdle()
+        composeTestRule.waitForIdle()
+
+        composeTestRule.onNode(hasText("contrase", ignoreCase = true, substring = true))
+            .assertIsDisplayed()
+    }
+
     private fun loginUser() = UserModel(
         userId = "42",
         firstName = FirstName.create("Jane"),

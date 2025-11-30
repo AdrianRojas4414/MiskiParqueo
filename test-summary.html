@@ -271,6 +271,7 @@
           <ul>
             <li>Usa MaintenanceRepository real con DataStore real y RemoteConfig simulado.</li>
             <li>refreshMaintenanceStatus propaga el valor del remote config al datastore y al estado del ViewModel.</li>
+            <li>Estado inicial se toma de DataStore y un fallo remoto conserva el valor previo.</li>
           </ul>
         </td>
       </tr>
@@ -280,6 +281,18 @@
           <ul>
             <li>Integra GetParkingLocationsUseCase, SearchParkingsUseCase y CalculateRouteUseCase en MapViewModel.</li>
             <li>Flujo completo: carga inicial, confirma origen, filtra por nombre y selecciona parking generando ruta con distancia/tiempo.</li>
+            <li>Limpiar busqueda regresa a mapa con origen confirmado.</li>
+            <li>Seleccionar sin origen produce estado Error y una falla en busqueda cambia a Error.</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td><code>integration/ReservationFlowIntegrationTest.kt</code></td>
+        <td>
+          <ul>
+            <li>Carga detalle via use case y calcula costo base.</li>
+            <li>Sin cupos marca validacion y hasAvailableSpots en false.</li>
+            <li>Fallo de repositorio expone mensaje de error en estado.</li>
           </ul>
         </td>
       </tr>
@@ -294,8 +307,8 @@
         <td><code>feature/auth/ui/AuthScreensUiTest.kt</code></td>
         <td>
           <ul>
-            <li>Login muestra error por password corta y navega en exito.</li>
-            <li>SignUp muestra error de email invalido y renderiza inputs.</li>
+            <li>Login muestra error por password corta, credencial vacia y navega en exito.</li>
+            <li>SignUp muestra error de email invalido, password debil, renderiza inputs y navega en exito.</li>
             <li>Login renderiza inputs y boton.</li>
           </ul>
         </td>
