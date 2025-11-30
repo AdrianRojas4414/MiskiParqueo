@@ -9,6 +9,7 @@ import com.miskidev.miskiparqueo.feature.map.domain.usecases.CalculateRouteUseCa
 import com.miskidev.miskiparqueo.feature.map.domain.usecases.GetParkingLocationsUseCase
 import com.miskidev.miskiparqueo.feature.map.domain.usecases.SearchParkingsUseCase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,7 +18,8 @@ import kotlinx.coroutines.launch
 class MapViewModel(
     private val getParkingLocationsUseCase: GetParkingLocationsUseCase,
     private val searchParkingsUseCase: SearchParkingsUseCase,
-    private val calculateRouteUseCase: CalculateRouteUseCase
+    private val calculateRouteUseCase: CalculateRouteUseCase,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : ViewModel() {
 
     sealed class MapStateUI {
@@ -60,7 +62,7 @@ class MapViewModel(
 
     // Cargar todos los parqueos
     private fun loadParkingLocations() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcher) {
             _state.value = MapStateUI.Loading
 
             val result = getParkingLocationsUseCase()
@@ -93,7 +95,7 @@ class MapViewModel(
 
     // Buscar parqueos en tiempo real
     fun searchParkings(query: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcher) {
             val result = searchParkingsUseCase(query)
 
             result.fold(

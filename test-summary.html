@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Resumen de Pruebas</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 24px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 8px 10px; border: 1px solid #ddd; text-align: left; }
+    th { background: #f3f3f3; }
+    caption { margin-bottom: 12px; font-weight: bold; font-size: 18px; }
+  </style>
+</head>
+<body>
+  <table>
+    <caption>Pruebas del Proyecto</caption>
+    <tr>
+      <th>Archivo</th>
+      <th>Nombre de prueba</th>
+      <th>Descripción</th>
+    </tr>
+    <tr><td colspan="3"><strong>Unitario · Value Objects</strong></td></tr>
+    <tr><td>app/src/test/java/com/miskidev/miskiparqueo/feature/auth/signup/domain/model/vo/SignUpValueObjectsTest.kt</td><td>email trims and lowercases input</td><td>Normaliza email quitando espacios y forzando minúsculas.</td></tr>
+    <tr><td></td><td>invalid email format throws</td><td>Rechaza formatos de email inválidos.</td></tr>
+    <tr><td></td><td>password enforces minimum rules</td><td>Exige longitud &gt;=8 y mezcla de dígitos y letras.</td></tr>
+    <tr><td></td><td>username allows expected characters and length</td><td>Acepta usernames válidos (3-36, alfanumérico + guion bajo).</td></tr>
+    <tr><td></td><td>username rejects invalid characters</td><td>Rechaza usernames con caracteres no permitidos.</td></tr>
+    <tr><td></td><td>first and last name cannot be blank</td><td>Impide nombres/apellidos vacíos.</td></tr>
+    <tr><td></td><td>first and last name enforce length limits</td><td>Rechaza nombres/apellidos de más de 50 caracteres.</td></tr>
+    <tr><td colspan="3"><strong>Unitario · Casos de uso</strong></td></tr>
+    <tr><td>app/src/test/java/com/miskidev/miskiparqueo/feature/auth/login/domain/usecases/LoginUseCaseTest.kt</td><td>blank credential fails fast</td><td>Credencial vacía devuelve fallo y no llama al repositorio.</td></tr>
+    <tr><td></td><td>successful login delegates to repository</td><td>Devuelve éxito cuando el repo autentica correctamente.</td></tr>
+    <tr><td></td><td>repository failure is propagated</td><td>Propaga el error entregado por el repositorio.</td></tr>
+    <tr><td></td><td>credential with spaces is considered blank</td><td>Trata credenciales solo con espacios como vacías.</td></tr>
+    <tr><td>app/src/test/java/com/miskidev/miskiparqueo/feature/map/domain/usecases/SearchParkingsUseCaseTest.kt</td><td>blank query returns all parkings</td><td>Consulta vacía retorna todos los parqueos.</td></tr>
+    <tr><td></td><td>query filters by name or address</td><td>Filtra parqueos por nombre o dirección ignorando mayúsculas.</td></tr>
+    <tr><td>app/src/test/java/com/miskidev/miskiparqueo/feature/map/domain/usecases/CalculateRouteUseCaseTest.kt</td><td>calculates non zero distance</td><td>Calcula una distancia válida y conserva el destino.</td></tr>
+    <tr><td></td><td>estimates time around 30kmh</td><td>Tiempo estimado ~60 min para ~30 km (30 km/h).</td></tr>
+    <tr><td colspan="3"><strong>Unitario · ViewModels</strong></td></tr>
+    <tr><td>app/src/test/java/com/miskidev/miskiparqueo/feature/auth/login/presentation/LoginViewModelTest.kt</td><td>invalid password produces validation state</td><td>Password corta dispara ValidationError.</td></tr>
+    <tr><td></td><td>successful login updates state</td><td>Estado pasa a Success con el usuario retornado.</td></tr>
+    <tr><td></td><td>repository error is exposed</td><td>Errores del repositorio se exponen como Error.</td></tr>
+    <tr><td>app/src/test/java/com/miskidev/miskiparqueo/feature/auth/signup/presentation/SignUpViewModelTest.kt</td><td>invalid email produces validation error</td><td>Email inválido genera ValidationError específico.</td></tr>
+    <tr><td></td><td>successful signup updates state</td><td>Signup exitoso produce estado Success con usuario.</td></tr>
+    <tr><td></td><td>weak password triggers validation error</td><td>Password débil produce ValidationError.</td></tr>
+    <tr><td>app/src/test/java/com/miskidev/miskiparqueo/feature/map/presentation/MapViewModelTest.kt</td><td>view model loads parking locations on init</td><td>Carga parqueos al inicializar y pasa a ShowingMap.</td></tr>
+    <tr><td></td><td>confirming origin and selecting parking returns route info</td><td>Con origen confirmado, seleccionar parqueo produce ruta.</td></tr>
+    <tr><td></td><td>search updates state with filtered results</td><td>Busqueda cambia a Searching con resultados filtrados.</td></tr>
+    <tr><td></td><td>selecting parking without origin yields error</td><td>Seleccionar sin origen produce estado Error.</td></tr>
+    <tr><td colspan="3"><strong>UI · Robolectric + Compose</strong></td></tr>
+    <tr><td>app/src/test/java/com/miskidev/miskiparqueo/feature/auth/ui/AuthScreensUiTest.kt</td><td>loginScreenShowsValidationErrorForShortPassword</td><td>Mostrar mensaje de “8 caracteres” al ingresar password corta.</td></tr>
+    <tr><td></td><td>loginScreenCallsNavigationOnSuccess</td><td>En éxito llama a navegación con el userId retornado.</td></tr>
+    <tr><td></td><td>signUpScreenShowsEmailValidationError</td><td>Email inválido muestra mensaje de error de email.</td></tr>
+    <tr><td></td><td>signUpScreenShowsAllInputs</td><td>Renderiza los 5 campos de texto y botón de registro.</td></tr>
+    <tr><td></td><td>loginScreenShowsInputsAndButton</td><td>Renderiza inputs de credencial y password y botón de ingreso.</td></tr>
+    <tr><td colspan="3"><strong>Infra</strong></td></tr>
+    <tr><td>app/src/test/java/com/miskidev/miskiparqueo/MainDispatcherRule.kt</td><td>Regla de dispatcher</td><td>Configura Dispatchers.Main con dispatcher de prueba.</td></tr>
+    <tr><td>app/src/test/AndroidManifest.xml</td><td>Manifest de pruebas</td><td>Declara ComponentActivity para Robolectric.</td></tr>
+  </table>
+</body>
+</html>

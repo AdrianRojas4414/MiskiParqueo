@@ -16,6 +16,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.google.gms.google.services)
     alias(libs.plugins.ksp)
+    jacoco
 }
 
 android {
@@ -58,6 +59,14 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
+    }
+    testOptions {
+        unitTests.isIncludeAndroidResources = true
+        unitTests.all {
+            // Avoid bytecode verification issues when coverage agent touches android-all classes
+            it.jvmArgs("-noverify")
+        }
     }
 }
 
@@ -108,10 +117,32 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
     testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(platform(libs.androidx.compose.bom))
+    testImplementation(libs.androidx.ui.test.junit4)
+    testImplementation(libs.androidx.ui.test.manifest)
+    testImplementation("androidx.test:core:1.6.1")
+    testImplementation("org.robolectric:robolectric:4.12.1")
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+}
+
+// Restrict Jacoco to instrument only our code to keep Robolectric happy during coverage runs
+tasks.withType<Test>().configureEach {
+    jacoco {
+        excludes += listOf(
+            "jdk.internal.*",
+            "java.*",
+            "sun.*",
+            "android.*",
+            "androidx.*",
+            "org.robolectric.*",
+            "kotlin.*",
+            "kotlinx.*",
+            "com.google.android.*"
+        )
+    }
 }

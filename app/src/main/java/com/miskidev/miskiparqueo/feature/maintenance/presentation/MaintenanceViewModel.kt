@@ -5,19 +5,24 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.miskidev.miskiparqueo.feature.maintenance.data.MaintenanceRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class MaintenanceViewModel(private val repository: MaintenanceRepository): ViewModel() {
+class MaintenanceViewModel(
+    private val repository: MaintenanceRepository,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val enablePeriodicFetch: Boolean = true
+): ViewModel() {
     private val _maintenanceMode = MutableStateFlow(false)
     val maintenanceMode: StateFlow<Boolean> = _maintenanceMode.asStateFlow()
 
     init {
         observeMaintenanceStatus()
-        startPeriodicFetch()
+        if (enablePeriodicFetch) startPeriodicFetch()
     }
 
     private fun observeMaintenanceStatus() {
@@ -30,8 +35,8 @@ class MaintenanceViewModel(private val repository: MaintenanceRepository): ViewM
     }
 
     private fun startPeriodicFetch() {
-        viewModelScope.launch(Dispatchers.IO) {
-            while (true) {
+        viewModelScope.launch(dispatcher) {
+            while (enablePeriodicFetch) {
                 try {
                     fetchMaintenanceStatus()
                     delay(5000) // Fetch cada 5 segundos
@@ -55,7 +60,7 @@ class MaintenanceViewModel(private val repository: MaintenanceRepository): ViewM
     }
 
     fun refreshMaintenanceStatus() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcher) {
             fetchMaintenanceStatus()
         }
     }

@@ -9,6 +9,7 @@ import java.time.LocalTime
 import java.time.ZoneId
 import java.time.temporal.ChronoUnit
 import kotlin.math.ceil
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,7 +17,8 @@ import kotlinx.coroutines.launch
 
 class ReservationViewModel(
     private val parkingId: String,
-    private val getReservationDetailUseCase: GetReservationDetailUseCase
+    private val getReservationDetailUseCase: GetReservationDetailUseCase,
+    private val dispatcher: CoroutineDispatcher = kotlinx.coroutines.Dispatchers.IO
 ) : ViewModel() {
 
     data class ReservationUiState(
@@ -67,7 +69,7 @@ class ReservationViewModel(
     }
 
     private fun loadReservationDetail() {
-        viewModelScope.launch {
+        viewModelScope.launch(dispatcher) {
             _uiState.value = ReservationUiState(isLoading = true)
             val defaultEntry = LocalTime.now().truncatedTo(ChronoUnit.HOURS)
             val defaultExit = defaultEntry.plusHours(2)

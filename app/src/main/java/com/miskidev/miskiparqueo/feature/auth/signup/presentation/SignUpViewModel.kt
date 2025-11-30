@@ -10,13 +10,15 @@ import com.miskidev.miskiparqueo.feature.auth.signup.domain.model.vo.Password
 import com.miskidev.miskiparqueo.feature.auth.signup.domain.model.vo.Username
 import com.miskidev.miskiparqueo.feature.auth.signup.domain.usecases.SignUpUseCase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class SignUpViewModel(
-    private val signUpUseCase: SignUpUseCase
+    private val signUpUseCase: SignUpUseCase,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ): ViewModel() {
 
     sealed class SignUpStateUI {
@@ -43,7 +45,7 @@ class SignUpViewModel(
         emailRaw: String,
         passwordRaw: String
     ) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcher) {
             _state.value = SignUpStateUI.Loading
 
             try {
