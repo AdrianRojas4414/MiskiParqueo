@@ -81,26 +81,24 @@
 <body>
   <header>
     <span class="badge">Unitarias</span>
+    <span class="badge">Integracion</span>
     <span class="badge">UI Robolectric + Compose</span>
     <h1>Resumen de pruebas</h1>
     <p class="lead">
-      Las pruebas cubren validaciones de dominio, casos de uso, view models y pantallas Compose en JVM.
-      No hay suites de integracion end-to-end; los repositorios usan dobles (mocks/fakes) en la mayoria de casos.
+      Las pruebas cubren validaciones de dominio, casos de uso, view models, integraciones ligeras y pantallas Compose en JVM.
+      No hay suites end-to-end ni instrumentadas; los repositorios usan dobles (mocks/fakes) salvo donde se indica.
     </p>
   </header>
 
   <section class="card">
-    <h2>Dominio y casos de uso</h2>
+    <h2>Pruebas unitarias</h2>
     <table>
-      <tr>
-        <th>Archivo</th>
-        <th>Casos clave</th>
-      </tr>
+      <tr><th>Archivo</th><th>Casos clave</th></tr>
       <tr>
         <td><code>feature/auth/signup/domain/model/vo/SignUpValueObjectsTest.kt</code></td>
         <td>
           <ul>
-            <li>Email se normaliza (trim/lower) y rechaza formatos invalidos.</li>
+            <li>Normaliza email (trim/lower) y rechaza formatos invalidos.</li>
             <li>Password exige largo minimo y mezcla de letras/digitos.</li>
             <li>Username valida longitud y caracteres permitidos.</li>
             <li>Nombre y apellido no pueden ser vacios ni excederse.</li>
@@ -154,17 +152,6 @@
         </td>
       </tr>
       <tr>
-        <td><code>ExampleUnitTest.kt</code></td>
-        <td>Suma basica 2+2=4 (plantilla).</td>
-      </tr>
-    </table>
-  </section>
-
-  <section class="card">
-    <h2>Datos y repositorios</h2>
-    <table>
-      <tr><th>Archivo</th><th>Casos clave</th></tr>
-      <tr>
         <td><code>feature/maintenance/data/MaintenanceDataStoreTest.kt</code></td>
         <td>Guarda y lee la bandera de mantenimiento en DataStore.</td>
       </tr>
@@ -196,13 +183,6 @@
           </ul>
         </td>
       </tr>
-    </table>
-  </section>
-
-  <section class="card">
-    <h2>ViewModels</h2>
-    <table>
-      <tr><th>Archivo</th><th>Casos clave</th></tr>
       <tr>
         <td><code>feature/auth/login/presentation/LoginViewModelTest.kt</code></td>
         <td>
@@ -274,11 +254,40 @@
           </ul>
         </td>
       </tr>
+      <tr>
+        <td><code>ExampleUnitTest.kt</code></td>
+        <td>Suma basica 2+2=4 (plantilla).</td>
+      </tr>
     </table>
   </section>
 
   <section class="card">
-    <h2>UI (Compose + Robolectric)</h2>
+    <h2>Pruebas de integracion</h2>
+    <table>
+      <tr><th>Archivo</th><th>Casos clave</th></tr>
+      <tr>
+        <td><code>integration/MaintenanceIntegrationTest.kt</code></td>
+        <td>
+          <ul>
+            <li>Usa MaintenanceRepository real con DataStore real y RemoteConfig simulado.</li>
+            <li>refreshMaintenanceStatus propaga el valor del remote config al datastore y al estado del ViewModel.</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td><code>integration/MapFlowIntegrationTest.kt</code></td>
+        <td>
+          <ul>
+            <li>Integra GetParkingLocationsUseCase, SearchParkingsUseCase y CalculateRouteUseCase en MapViewModel.</li>
+            <li>Flujo completo: carga inicial, confirma origen, filtra por nombre y selecciona parking generando ruta con distancia/tiempo.</li>
+          </ul>
+        </td>
+      </tr>
+    </table>
+  </section>
+
+  <section class="card">
+    <h2>Pruebas de UI (Compose + Robolectric)</h2>
     <table>
       <tr><th>Archivo</th><th>Casos clave</th></tr>
       <tr>
