@@ -4,16 +4,18 @@ import android.util.Log
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.miskidev.miskiparqueo.R
+import java.util.concurrent.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 
 class MaintenanceRepository(
     private val remoteConfig: FirebaseRemoteConfig,
-    private val dataStore: MaintenanceDataStore
+    private val dataStore: MaintenanceDataStore,
+    private val initRemote: Boolean = true
 ) {
     init {
-        setupRemoteConfig()
+        if (initRemote) setupRemoteConfig()
     }
 
     private fun setupRemoteConfig() {
@@ -39,6 +41,7 @@ class MaintenanceRepository(
             dataStore.setMaintenanceMode(maintenanceMode)
             emit(maintenanceMode)
         } catch (e: Exception) {
+            if (e is CancellationException) throw e
             Log.e("MaintenanceRepository", "Error al obtener maintenance status", e)
             dataStore.getMaintenanceMode().collect { emit(it) }
         }

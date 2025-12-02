@@ -6,13 +6,15 @@ import com.miskidev.miskiparqueo.feature.auth.domain.model.UserModel
 import com.miskidev.miskiparqueo.feature.auth.login.domain.usecases.LoginUseCase
 import com.miskidev.miskiparqueo.feature.auth.signup.domain.model.vo.Password
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
-    private val loginUseCase: LoginUseCase
+    private val loginUseCase: LoginUseCase,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : ViewModel() {
 
     sealed class LoginStateUI {
@@ -27,7 +29,7 @@ class LoginViewModel(
     val state: StateFlow<LoginStateUI> = _state.asStateFlow()
 
     fun login(credentialRaw: String, passwordRaw: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcher) {
             _state.value = LoginStateUI.Loading
 
             try {
